@@ -217,6 +217,15 @@
         </div>
         <div class="up-status" id="upStatus"></div>
         <div class="hint">Escolha uma imagem do computador (sobe pra img/ no GitHub) ou digite o caminho manual.</div>
+        <img id="pImgPrev" alt="preview" style="max-width:120px;margin-top:8px;border-radius:8px;display:none" onerror="this.style.display='none'" />
+        <script>
+          window.imgPrev = () => {
+            const p = $("pImg").value.trim();
+            const el = $("pImgPrev");
+            if (p) { el.src = p; el.style.display = "block"; } else { el.style.display = "none"; }
+          };
+          document.getElementById("pImg").addEventListener("input", window.imgPrev);
+        </script>
       </div>
       <div class="field">
         <label>Fotos extras (galeria) — separadas por vírgula</label>
@@ -470,6 +479,7 @@ async function uploadImage(){
       const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
       if (!imgs.includes(path)) imgs.push(path);
       $("pImgs").value = imgs.join(", ");
+      window.imgPrev && imgPrev();
 
       status.textContent = "✅ Imagem enviada! Caminho: " + path;
       status.className = "up-status";
@@ -593,6 +603,7 @@ function openModal(id){
   $("pNome").value = ""; $("pPreco").value = ""; $("pPrecoDe").value = "";
   $("pId").value = ""; $("pDesc").value = ""; $("pImg").value = ""; $("pImgs").value = ""; $("pNovidade").checked = false;
   $("pFile").value = ""; $("upStatus").textContent = ""; $("upStatus").className = "up-status";
+  $("pImgPrev").style.display = "none";
   $("modalTitle").textContent = "Novo produto";
 
   if (id) {
@@ -609,6 +620,7 @@ function openModal(id){
     $("pImgs").value = (p.imgs || []).join(", ");
     $("pNovidade").checked = /novidade/i.test(p.desc || "");
     $("pCat").value = p.cat || CATS[0]?.key || "";
+    window.imgPrev && imgPrev();
   }
   $("modal").classList.remove("hide");
 }
