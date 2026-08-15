@@ -802,18 +802,6 @@ const CONFIG = {
       "nome": "Kit SADHU Tesoura Full Metal + Cuia",
       "preco": 70,
       "desc": "Kit Sadhu com tesoura full metal + cuia — dupla certa pra preparar a sessão. Novidade."
-    },
-    {
-      "id": "teste",
-      "cat": "acessorio",
-      "nome": "teste",
-      "preco": 123,
-      "desc": "teste",
-      "img": "img/gbdd-png.png",
-      "imgs": [
-        "img/screenshot-1-png.png",
-        "img/gbdd-png.png"
-      ]
     }
   ]
 };
