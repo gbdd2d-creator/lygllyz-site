@@ -82,6 +82,11 @@
   .field input,.field select,.field textarea{width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx)}
   .field textarea{resize:vertical}
   .field .hint{font-size:11px;color:var(--tx2);margin-top:3px}
+  .up-row{display:flex;gap:8px}
+  .up-row input{flex:1}
+  .btn-up{white-space:nowrap;padding:10px 14px;border-radius:8px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx);font-size:13px;cursor:pointer}
+  .up-status{font-size:12px;color:var(--ok);margin-top:4px;min-height:16px}
+  .up-status.err{color:var(--erro)}
   .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
   .check input{width:auto}
   .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 20px;border-top:1px solid var(--borda)}
@@ -204,9 +209,14 @@
         <textarea id="pDesc" rows="2" placeholder="Descrição curta do produto"></textarea>
       </div>
       <div class="field">
-        <label>Foto principal (arquivo em img/)</label>
-        <input id="pImg" placeholder="img/seda-o2slim.jpg" />
-        <div class="hint">Deixe vazio para placeholder automático.</div>
+        <label>Foto principal</label>
+        <div class="up-row">
+          <input id="pImg" placeholder="img/seda-o2slim.jpg" />
+          <button class="btn-up" onclick="document.getElementById('pFile').click()">📁 Escolher imagem</button>
+          <input id="pFile" type="file" accept="image/*" onchange="uploadImage()" style="display:none" />
+        </div>
+        <div class="up-status" id="upStatus"></div>
+        <div class="hint">Escolha uma imagem do computador (sobe pra img/ no GitHub) ou digite o caminho manual.</div>
       </div>
       <div class="field">
         <label>Fotos extras (galeria) — separadas por vírgula</label>
@@ -377,6 +387,75 @@ async function saveToGithub(){
   }
 }
 
+/* ================= UPLOAD DE IMAGEM ================= */
+async function uploadImage(){
+  const file = $("pFile").files[0];
+  const st = lsGet("lyg_settings", {});
+  const status = $("upStatus");
+  if (!file) return;
+  if (!st.token || !st.owner || !st.repo) {
+    status.textContent = "Configure o GitHub (⚙️ Configurações) antes de enviar imagem.";
+    status.className = "up-status err";
+    return;
+  }
+  // valida tipo e tamanho
+  if (!file.type.startsWith("image/")) {
+    status.textContent = "Escolha um arquivo de imagem.";
+    status.className = "up-status err";
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    status.textContent = "Imagem muito grande (máx 5MB).";
+    status.className = "up-status err";
+    return;
+  }
+
+  // nome do arquivo: sanitiza e garante .jpg/.png/.webp
+  const base = file.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+  const ext = (file.name.match(/\.[a-z0-9]+$/i) || [".jpg"])[0].toLowerCase();
+  const nomeArquivo = base + ext;
+
+  try {
+    status.textContent = "Enviando imagem…";
+    status.className = "up-status";
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = reader.result.split(",")[1];
+      const path = "img/" + nomeArquivo;
+
+      // evita duplicar: se já existe, só atualiza (mesmo sha)
+      let sha = null;
+      try {
+        const cur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path));
+        sha = cur.sha;
+      } catch (e) { /* arquivo novo */ }
+
+      await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path), {
+        method: "PUT",
+        body: JSON.stringify({
+          message: "Upload de imagem via painel admin: " + nomeArquivo,
+          content: base64,
+          ...(sha ? { sha } : {})
+        })
+      });
+
+      // preenche o campo e a galeria
+      $("pImg").value = path;
+      const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
+      if (!imgs.includes(path)) imgs.push(path);
+      $("pImgs").value = imgs.join(", ");
+
+      status.textContent = "✅ Imagem enviada! Caminho: " + path;
+      status.className = "up-status";
+    };
+    reader.readAsDataURL(file);
+  } catch (e) {
+    status.textContent = "Falha ao enviar: " + e.message;
+    status.className = "up-status err";
+  }
+}
+
 /* ================= PARSE / BUILD CONFIG.JS ================= */
 function parseConfig(src){
   // executa o JS do config.js num escopo isolado e captura o CONFIG
@@ -468,6 +547,7 @@ function openModal(id){
   editingId = null;
   $("pNome").value = ""; $("pPreco").value = ""; $("pPrecoDe").value = "";
   $("pId").value = ""; $("pDesc").value = ""; $("pImg").value = ""; $("pImgs").value = ""; $("pNovidade").checked = false;
+  $("pFile").value = ""; $("upStatus").textContent = ""; $("upStatus").className = "up-status";
   $("modalTitle").textContent = "Novo produto";
 
   if (id) {
