@@ -399,7 +399,9 @@ async function saveToGithub(){
 }
 
 /* ================= UPLOAD DE IMAGEM ================= */
-async function uploadImage(){
+let pendingUpload = null;
+
+function uploadImage(){
   const file = $("pFile").files[0];
   const st = lsGet("lyg_settings", {});
   const status = $("upStatus");
@@ -426,69 +428,79 @@ async function uploadImage(){
   const ext = (file.name.match(/\.[a-z0-9]+$/i) || [".jpg"])[0].toLowerCase();
   const nomeArquivo = base + ext;
 
-  try {
-    status.textContent = "Enviando imagem…";
-    status.className = "up-status";
+  status.textContent = "Enviando imagem…";
+  status.className = "up-status";
 
+  pendingUpload = new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = async () => {
-      const base64 = reader.result.split(",")[1];
-      const dataUrl = reader.result;
-      const path = "img/" + nomeArquivo;
-
-      // evita duplicar: se já existe, só atualiza (mesmo sha)
-      let sha = null;
       try {
-        const cur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path));
-        sha = cur.sha;
-      } catch (e) { /* arquivo novo */ }
+        const base64 = reader.result.split(",")[1];
+        const dataUrl = reader.result;
+        const path = "img/" + nomeArquivo;
 
-      await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path), {
-        method: "PUT",
-        body: JSON.stringify({
-          message: "Upload de imagem via painel admin: " + nomeArquivo,
-          content: base64,
-          ...(sha ? { sha } : {})
-        })
-      });
-
-      // gera e envia a miniatura (img/th/) usada pelo site
-      try {
-        const thumbDataUrl = await makeThumb(dataUrl);
-        const thumbB64 = thumbDataUrl.split(",")[1];
-        const thumbPath = "img/th/" + nomeArquivo;
-        let tsha = null;
+        // evita duplicar: se já existe, só atualiza (mesmo sha)
+        let sha = null;
         try {
-          const tcur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath));
-          tsha = tcur.sha;
-        } catch (e2) { /* arquivo novo */ }
-        await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath), {
+          const cur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path));
+          sha = cur.sha;
+        } catch (e) { /* arquivo novo */ }
+
+        await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(path), {
           method: "PUT",
           body: JSON.stringify({
-            message: "Upload de miniatura via painel admin: " + nomeArquivo,
-            content: thumbB64,
-            ...(tsha ? { sha: tsha } : {})
+            message: "Upload de imagem via painel admin: " + nomeArquivo,
+            content: base64,
+            ...(sha ? { sha } : {})
           })
         });
-      } catch (e2) {
-        console.warn("miniatura não gerada:", e2.message);
+
+        // gera e envia a miniatura (img/th/) usada pelo site
+        try {
+          const thumbDataUrl = await makeThumb(dataUrl);
+          const thumbB64 = thumbDataUrl.split(",")[1];
+          const thumbPath = "img/th/" + nomeArquivo;
+          let tsha = null;
+          try {
+            const tcur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath));
+            tsha = tcur.sha;
+          } catch (e2) { /* arquivo novo */ }
+          await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath), {
+            method: "PUT",
+            body: JSON.stringify({
+              message: "Upload de miniatura via painel admin: " + nomeArquivo,
+              content: thumbB64,
+              ...(tsha ? { sha: tsha } : {})
+            })
+          });
+        } catch (e2) {
+          console.warn("miniatura não gerada:", e2.message);
+        }
+
+        // preenche o campo e a galeria
+        $("pImg").value = path;
+        const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
+        if (!imgs.includes(path)) imgs.push(path);
+        $("pImgs").value = imgs.join(", ");
+        window.imgPrev && imgPrev();
+
+        status.textContent = "✅ Imagem enviada! Caminho: " + path;
+        status.className = "up-status";
+      } catch (e) {
+        status.textContent = "Falha ao enviar: " + e.message;
+        status.className = "up-status err";
       }
-
-      // preenche o campo e a galeria
-      $("pImg").value = path;
-      const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
-      if (!imgs.includes(path)) imgs.push(path);
-      $("pImgs").value = imgs.join(", ");
-      window.imgPrev && imgPrev();
-
-      status.textContent = "✅ Imagem enviada! Caminho: " + path;
-      status.className = "up-status";
+      pendingUpload = null;
+      resolve();
+    };
+    reader.onerror = () => {
+      status.textContent = "Falha ao ler o arquivo.";
+      status.className = "up-status err";
+      pendingUpload = null;
+      resolve();
     };
     reader.readAsDataURL(file);
-  } catch (e) {
-    status.textContent = "Falha ao enviar: " + e.message;
-    status.className = "up-status err";
-  }
+  });
 }
 
 function makeThumb(dataUrl, maxW) {
@@ -636,11 +648,17 @@ function slugify(s){
     .slice(0, 60);
 }
 
-function saveProduct(){
+async function saveProduct(){
   const nome = $("pNome").value.trim();
   const preco = parseFloat($("pPreco").value);
   if (!nome) { toast("Informe o nome do produto.", true); return; }
   if (isNaN(preco) || preco < 0) { toast("Informe um preço válido.", true); return; }
+
+  // se tem upload de imagem em andamento, aguarda terminar (preenche o campo img)
+  if (pendingUpload) {
+    toast("Aguardando o envio da imagem…");
+    await pendingUpload;
+  }
 
   const cat = $("pCat").value;
   let id = $("pId").value.trim() || slugify(nome);
