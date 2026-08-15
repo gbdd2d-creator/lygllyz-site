@@ -355,6 +355,8 @@ async function loadFromGithub(){
 }
 
 async function saveToGithub(){
+  // lê direto dos campos e salva antes de usar
+  saveSettings();
   const st = lsGet("lyg_settings", {});
   if (!st.token) { toast("Configure o token GitHub primeiro.", true); return; }
   if (!CONFIG) { toast("Nada para salvar — carregue os produtos antes.", true); return; }
