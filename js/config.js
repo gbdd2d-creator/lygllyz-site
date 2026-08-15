@@ -802,17 +802,6 @@ const CONFIG = {
       "nome": "Kit SADHU Tesoura Full Metal + Cuia",
       "preco": 70,
       "desc": "Kit Sadhu com tesoura full metal + cuia — dupla certa pra preparar a sessão. Novidade."
-    },
-    {
-      "id": "teste",
-      "cat": "tabaco",
-      "nome": "teste",
-      "preco": 123,
-      "desc": "teste Novidade.",
-      "img": "img/gbdd-png.png",
-      "imgs": [
-        "img/gbdd-png.png"
-      ]
     }
   ]
 };
