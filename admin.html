@@ -380,10 +380,10 @@ async function saveToGithub(){
 /* ================= PARSE / BUILD CONFIG.JS ================= */
 function parseConfig(src){
   // executa o JS do config.js num escopo isolado e captura o CONFIG
-  const c = {};
-  const f = new Function("CONFIG", src + "\n;window.__CFG = CONFIG;");
-  f(c);
-  CONFIG = window.__CFG || c;
+  const f = new Function(src + "\n;window.__CFG = CONFIG;");
+  f();
+  CONFIG = window.__CFG;
+  if (!CONFIG) { toast("config.js não tem CONFIG válido.", true); return; }
   if (!CONFIG.categorias) CONFIG.categorias = [];
   if (!CONFIG.produtos) CONFIG.produtos = [];
   if (!CONFIG.destaques) CONFIG.destaques = [];
