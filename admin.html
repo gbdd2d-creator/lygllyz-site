@@ -623,8 +623,11 @@ function saveProduct(){
 
   closeModal();
   renderTable();
-  toast(editingId ? "Produto atualizado!" : "Produto adicionado!");
+  const msg = editingId ? "Produto atualizado! Publicando…" : "Produto adicionado! Publicando…";
   editingId = null;
+  // publica automaticamente no GitHub
+  saveToGithub();
+  toast(msg);
 }
 
 function deleteProduct(id){
@@ -633,7 +636,8 @@ function deleteProduct(id){
   delete (CONFIG.promocoes || {})[id];
   CONFIG.destaques = (CONFIG.destaques || []).filter((d) => d !== id);
   renderTable();
-  toast("Produto excluído.");
+  toast("Produto excluído. Publicando…");
+  saveToGithub();
 }
 
 /* ================= UTILS ================= */
