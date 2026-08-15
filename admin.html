@@ -129,7 +129,7 @@
         <div><label>Token GitHub (classic)</label><input id="sToken" type="password" placeholder="ghp_..." /></div>
         <div><label>Dono do repo</label><input id="sOwner" placeholder="gbdd2d-creator" /></div>
         <div><label>Repo</label><input id="sRepo" placeholder="lygllyz-site" /></div>
-        <div><label>Caminho do config.js</label><input id="sPath" placeholder="site lygllyz/js/config.js" /></div>
+        <div><label>Caminho do config.js</label><input id="sPath" placeholder="js/config.js" /></div>
       </div>
       <div class="actions">
         <button class="btn-load" onclick="saveSettings()">Salvar configuração</button>
@@ -325,6 +325,8 @@ async function ghFetch(url, opts){
 }
 
 async function loadFromGithub(){
+  // lê direto dos campos (mais simples pro usuário) e salva
+  saveSettings();
   const st = lsGet("lyg_settings", {});
   if (!st.token) { toast("Configure o token GitHub primeiro (⚙️ Configurações).", true); return; }
   if (!st.owner || !st.repo || !st.path) { toast("Configure owner/repo/caminho.", true); return; }
