@@ -102,7 +102,8 @@ const CONFIG = {
     "case-sadhufull": 200,
     "bong-hashcollector": 130,
     "ban-sadhu": 75,
-    "mac-guru": 45
+    "mac-guru": 45,
+    "teste": 131
   },
   "categorias": [
     {
@@ -804,11 +805,15 @@ const CONFIG = {
       "desc": "Kit Sadhu com tesoura full metal + cuia — dupla certa pra preparar a sessão. Novidade."
     },
     {
-      "id": "teste-slimm",
+      "id": "teste",
       "cat": "bag",
       "nome": "teste",
-      "preco": 22,
-      "desc": "testeee"
+      "preco": 123,
+      "desc": "teste Novidade.",
+      "img": "img/screenshot-1-png.png",
+      "imgs": [
+        "img/screenshot-1-png.png"
+      ]
     }
   ]
 };
