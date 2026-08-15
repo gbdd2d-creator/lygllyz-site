@@ -7,6 +7,8 @@ git add .
 set /p msg="Mensagem do commit: "
 if "%msg%"=="" set msg="atualiza produtos"
 git commit -m "%msg%"
+echo Sincronizando com o GitHub (para evitar conflitos)...
+git pull --rebase origin main
 git push
 echo.
 echo Deployando no Vercel...
