@@ -1,0 +1,9 @@
+{
+  "name": "lygllyz-site",
+  "private": true,
+  "scripts": {
+    "serve": "npx serve . -p 3000",
+    "deploy": "vercel --prod",
+    "deploy:preview": "vercel"
+  }
+}

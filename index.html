@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lygllyz Tabacaria · Smoke Culture</title>
+  <meta name="description" content="Lygllyz Tabacaria — smoke culture. Sedas, piteiras, bongs, kits e acessórios. Peça pelo WhatsApp." />
+
+  <link rel="icon" href="camaleao-sem-fundo.png" />
+  <!-- aplica o tema salvo antes da pintura (evita "piscar" de cor) -->
+  <script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('lygllyz_theme')||'dark');}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Montserrat:wght@700;800;900&family=Permanent+Marker&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Rubik+Wet+Paint&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Fundo animado (fumaça verde/roxa + estrelas) -->
+  <div class="bg-fx" aria-hidden="true">
+    <div class="smoke smoke-1"></div>
+    <div class="smoke smoke-2"></div>
+    <div class="smoke smoke-3"></div>
+    <div class="stars"></div>
+  </div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#" data-view="inicio">
+        <img class="brand-logo" src="camaleao-sem-fundo.png" alt="Lygllyz" />
+        <span class="brand-text">
+          <span class="brand-name">LYGLLYZ</span>
+          <span class="brand-sub">TABACARIA</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegação principal">
+        <button class="nav-tab is-active" data-view="inicio">Início</button>
+        <button class="nav-tab" data-view="produtos">Produtos</button>
+        <button class="nav-tab" data-view="loja">A Loja</button>
+      </nav>
+
+      <div class="cat-menu-wrap">
+        <button id="catMenuBtn" class="cat-menu-btn" aria-label="Menu de categorias" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          <span class="cmb-label">Categorias</span>
+        </button>
+        <div id="catMenu" class="cat-menu" role="menu" aria-label="Categorias" hidden></div>
+      </div>
+
+      <button id="themeToggle" class="theme-toggle" aria-label="Alternar modo claro/escuro">
+        <svg class="ic-sun" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="ic-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+
+      <button id="cartBtn" class="cart-btn" aria-label="Abrir carrinho">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span id="cartCount" class="cart-count" hidden>0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== VIEW: INÍCIO ===================== -->
+  <section class="view view-inicio is-active" data-view="inicio">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-splash" aria-hidden="true"></div>
+      <div class="hero-text">
+        <span class="hero-eyebrow">Smoke Culture · Tabacaria</span>
+        <h1 class="hero-title">
+          <span class="hero-line">Tudo pra sua <span class="hero-accent">sessão</span></span>
+          <span class="hero-line">num lugar só</span>
+        </h1>
+        <p class="hero-desc">Sedas, piteiras, bongs, kits e acessórios com preço justo e entrega rápida em Aracruz. 🦎</p>
+        <div class="hero-actions">
+          <button class="btn btn-green" data-view="produtos">Ver Produtos</button>
+          <button class="btn btn-ghost" data-view="loja">Falar com a loja</button>
+        </div>
+        <ul class="hero-badges" aria-label="Vantagens">
+          <li><span>🛵</span> Entrega em Aracruz</li>
+          <li><span>💬</span> Pedido pelo WhatsApp</li>
+          <li><span>🔞</span> Venda +18</li>
+        </ul>
+      </div>
+      <div class="hero-art">
+        <img class="hero-cham" src="camaleao-sem-fundo.png" alt="Mascote Lygllyz" />
+      </div>
+    </div>
+
+    <!-- BENEFÍCIOS -->
+    <section class="benefits" aria-label="Vantagens da loja">
+      <div class="benefit"><span class="bn-ic">🦎</span><div class="bn-tx"><strong>Curadoria smoke</strong><span>marcas e qualidade</span></div></div>
+      <div class="benefit"><span class="bn-ic">🏷️</span><div class="bn-tx"><strong>Preço justo</strong><span>sem enrolação</span></div></div>
+      <div class="benefit"><span class="bn-ic">🛵</span><div class="bn-tx"><strong>Entrega rápida</strong><span>Aracruz e região</span></div></div>
+      <div class="benefit"><span class="bn-ic">💬</span><div class="bn-tx"><strong>Atendimento real</strong><span>direto no WhatsApp</span></div></div>
+    </section>
+
+    <!-- DESTAQUES -->
+    <section class="showcase" aria-label="Destaques">
+      <div class="block-head">
+        <h2 class="section-title">Destaques 🦎</h2>
+        <button class="block-link" data-view="produtos">Ver todos →</button>
+      </div>
+      <div id="destaqueGrid" class="grid"></div>
+    </section>
+
+    <!-- PROMOÇÕES -->
+    <section id="promoSection" class="showcase" aria-label="Promoções" hidden>
+      <div class="block-head">
+        <h2 class="section-title">Promoções 🔥</h2>
+        <button class="block-link" data-view="produtos">Ver todos →</button>
+      </div>
+      <div id="promoGrid" class="grid"></div>
+    </section>
+
+    <!-- COMO PEDIR -->
+    <section class="steps" aria-label="Como pedir">
+      <div class="steps-head">
+        <h2 class="section-title">Como pedir</h2>
+        <p class="loja-sub">Rápido e sem complicação — em 3 passos. 🦎</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <span class="step-n">1</span>
+          <h3>Escolha os produtos</h3>
+          <p>Navegue pelas categorias e toque no <strong>+</strong> pra adicionar ao carrinho.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">2</span>
+          <h3>Monte seu kit</h3>
+          <p>Ajuste as quantidades no carrinho e veja o <strong>total na hora</strong>.</p>
+        </div>
+        <div class="step">
+          <span class="step-n">3</span>
+          <h3>Finalize no WhatsApp</h3>
+          <p>Informe entrega e pagamento e <strong>envie o pedido</strong> com 1 toque.</p>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ===================== VIEW: PRODUTOS ===================== -->
+  <section class="view view-produtos" data-view="produtos">
+    <main class="loja">
+      <div class="loja-head">
+        <h2 class="section-title">Nossos Produtos</h2>
+        <p class="loja-sub">Monta teu kit e finaliza no WhatsApp — <span id="prodCount">0</span> itens disponíveis.</p>
+      </div>
+      <div class="section-head">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="search" type="search" placeholder="Buscar produto…" autocomplete="off" />
+        </div>
+      </div>
+
+      <nav id="tabs" class="tabs" aria-label="Categorias"></nav>
+
+      <div id="grid" class="grid"></div>
+
+      <p id="emptyMsg" class="empty-msg" hidden>Nenhum produto encontrado nessa busca. 🦎</p>
+    </main>
+  </section>
+
+  <!-- ===================== VIEW: A LOJA ===================== -->
+  <section class="view view-loja" data-view="loja">
+    <div class="sobre-inner">
+      <div class="sobre-art">
+        <div class="splash-bg" aria-hidden="true"></div>
+        <img class="sobre-cham theme-dark-only" src="camaleao-fundo-escuro.png" alt="Mascote Lygllyz" />
+        <img class="sobre-cham theme-light-only" src="camaleao-fundo-branco.png" alt="Mascote Lygllyz" />
+      </div>
+
+      <div class="sobre-text">
+        <h2 class="section-title">A Loja</h2>
+        <p>A <strong>Lygllyz Tabacaria</strong> é mais que loja — é <em>smoke culture</em>. Curamos sedas, piteiras, bongs, kits e acessórios de qualidade pra elevar a sua sessão, com estilo de quebrada e aquele verde no coração. 🦎</p>
+        <p class="sobre-duvida">Ficou com dúvida? Fala com a gente — a equipe te ajuda a escolher o que combina com você.</p>
+
+        <ul class="contato-list">
+          <li><span class="ci-emoji">📱</span> <div class="ci-body"><span class="ci-label">WhatsApp</span><a id="link-whats" href="#" target="_blank" rel="noopener">WhatsApp</a></div></li>
+          <li><span class="ci-emoji">✉️</span> <div class="ci-body"><span class="ci-label">E-mail</span><a id="link-email" href="#">email</a></div></li>
+          <li><span class="ci-emoji">📸</span> <div class="ci-body"><span class="ci-label">Instagram</span><a id="link-insta" href="#" target="_blank" rel="noopener">instagram</a></div></li>
+          <li><span class="ci-emoji">📍</span> <div class="ci-body"><span class="ci-label">Endereço</span><span id="txt-endereco">endereço</span></div></li>
+          <li><span class="ci-emoji">🕒</span> <div class="ci-body"><span class="ci-label">Horário</span><span id="txt-horario">horário</span></div></li>
+        </ul>
+
+        <a id="btn-duvida" class="btn btn-green" href="#" target="_blank" rel="noopener">Tirar dúvida no WhatsApp 💬</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="footer-cols">
+      <div class="footer-brandcol">
+        <a class="footer-brand" href="#" data-view="inicio">
+          <img class="footer-logo" src="camaleao-sem-fundo.png" alt="Lygllyz" />
+          <span class="footer-brand-tx"><strong>LYGLLYZ</strong><span>TABACARIA</span></span>
+        </a>
+        <p class="footer-tagline">Smoke culture 🦎<br>Aracruz — ES · Venda +18</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegar</h4>
+        <nav class="footer-links">
+          <a href="#grid" data-view="produtos">Produtos</a>
+          <a href="#" data-view="loja">A Loja</a>
+          <a id="footer-whats" href="#" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        </nav>
+      </div>
+
+      <div class="footer-col">
+        <h4>Categorias</h4>
+        <nav id="footerCats" class="footer-links"></nav>
+      </div>
+
+      <div class="footer-col">
+        <h4>Pagamento</h4>
+        <div class="pay-badges"><span>Pix</span><span>Dinheiro</span><span>Cartão</span></div>
+        <p class="footer-secure">🔒 Pedido seguro pelo WhatsApp</p>
+      </div>
+    </div>
+
+    <p class="footer-graffiti">stay green · stay lygllyz</p>
+    <p class="footer-small">© <span id="ano"></span> Lygllyz Tabacaria · Venda proibida para menores de 18 anos.</p>
+  </footer>
+
+  <!-- ===================== CARRINHO (DRAWER) ===================== -->
+  <div id="cartOverlay" class="cart-overlay" hidden></div>
+
+  <aside id="cart" class="cart" aria-label="Carrinho de compras" aria-hidden="true">
+    <div class="cart-header">
+      <button id="cartBack" class="cart-back" aria-label="Voltar" hidden>←</button>
+      <h3 id="cartTitle">Seu Pedido</h3>
+      <button id="cartClose" class="cart-close" aria-label="Fechar">✕</button>
+    </div>
+
+    <!-- ETAPA 1: ITENS -->
+    <div id="stepItems" class="cart-step">
+      <div id="cartItems" class="cart-items"></div>
+
+      <p id="cartEmpty" class="cart-empty">Seu carrinho está vazio.<br><span>Adicione produtos e finalize pelo WhatsApp. 🦎</span></p>
+
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">R$ 0,00</strong>
+        </div>
+        <button id="checkout" class="btn btn-whats" disabled>Finalizar pedido 💬</button>
+        <p class="cart-note">Na próxima etapa você informa entrega e pagamento.<br>🛵 Entrega em Aracruz: R$ 10. Fora de Aracruz: varia conforme a cidade.</p>
+      </div>
+    </div>
+
+    <!-- ETAPA 2: FINALIZAR (dentro do carrinho) -->
+    <form id="checkoutForm" class="cart-step checkout-body" novalidate hidden>
+      <!-- Dados do cliente -->
+      <label class="field">
+        <span>Seu nome *</span>
+        <input id="f-nome" type="text" name="nome" placeholder="Ex.: João Silva" required />
+      </label>
+
+      <!-- Entrega ou retirada -->
+      <fieldset class="field">
+        <span class="field-label">Como quer receber? *</span>
+        <div class="opts">
+          <label class="opt"><input type="radio" name="entrega" value="entrega" checked /> 🛵 Entrega</label>
+          <label class="opt"><input type="radio" name="entrega" value="retirada" /> 🏪 Retirar na loja</label>
+        </div>
+      </fieldset>
+
+      <div id="enderecoWrap">
+        <label class="field">
+          <span>Rua e bairro *</span>
+          <input id="f-endereco" type="text" name="endereco" placeholder="Ex.: Rua das Flores, Centro" />
+        </label>
+        <div class="field-row">
+          <label class="field field-num">
+            <span>Número *</span>
+            <input id="f-numero" type="text" name="numero" placeholder="Ex.: 123" inputmode="numeric" />
+          </label>
+          <label class="opt opt-sn"><input id="f-semnumero" type="checkbox" /> Sem número (S/N)</label>
+        </div>
+        <label class="field">
+          <span>Complemento / ponto de referência</span>
+          <input id="f-complemento" type="text" name="complemento" placeholder="Apto, bloco, próximo a…" />
+        </label>
+
+        <fieldset class="field">
+          <span class="field-label">Região da entrega *</span>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="regiao" value="aracruz" checked /> 🏙️ Aracruz (R$ 10)</label>
+            <label class="opt"><input type="radio" name="regiao" value="fora" /> 🚚 Fora de Aracruz</label>
+          </div>
+          <label class="field" id="cidadeWrap" hidden>
+            <span>Cidade / localidade da entrega *</span>
+            <select id="f-cidade" name="cidade">
+              <option value="">Selecione a cidade…</option>
+            </select>
+          </label>
+          <p class="field-hint">Fora de Aracruz (Orla, Ibiraçu, João Neiva e cidades próximas) o frete muda conforme a cidade. Escolha a localidade pra ver o valor.</p>
+        </fieldset>
+      </div>
+
+      <!-- Forma de pagamento -->
+      <fieldset class="field">
+        <span class="field-label">Forma de pagamento *</span>
+        <div class="opts opts-pay">
+          <label class="opt"><input type="radio" name="pagamento" value="Pix" checked /> 💠 Pix</label>
+          <label class="opt"><input type="radio" name="pagamento" value="Dinheiro" /> 💵 Dinheiro</label>
+          <label class="opt"><input type="radio" name="pagamento" value="Cartão de débito" /> 💳 Débito</label>
+          <label class="opt"><input type="radio" name="pagamento" value="Cartão de crédito" /> 💳 Crédito</label>
+        </div>
+      </fieldset>
+
+      <label class="field" id="trocoWrap" hidden>
+        <span>Precisa de troco para quanto?</span>
+        <input id="f-troco" type="text" name="troco" placeholder="Ex.: R$ 100 (deixe vazio se não precisar)" />
+      </label>
+
+      <label class="field">
+        <span>Observações (opcional)</span>
+        <textarea id="f-obs" name="obs" rows="2" placeholder="Algum detalhe do pedido?"></textarea>
+      </label>
+
+      <!-- Resumo -->
+      <div class="checkout-summary">
+        <h4>Resumo do pedido</h4>
+        <div id="checkoutItems"></div>
+        <div class="ck-line ck-sub"><span>Subtotal</span><span id="checkoutSubtotal">R$ 0,00</span></div>
+        <div class="ck-line ck-frete" id="checkoutFreteRow"><span>🛵 Taxa de entrega</span><span id="checkoutFrete">R$ 0,00</span></div>
+        <div class="checkout-total"><span>Total</span><strong id="checkoutTotal">R$ 0,00</strong></div>
+      </div>
+
+      <p id="checkoutError" class="checkout-error" hidden></p>
+
+      <button type="submit" class="btn btn-whats">Enviar pedido no WhatsApp 💬</button>
+    </form>
+  </aside>
+
+  <!-- ===================== POP-UP DE PRODUTO ===================== -->
+  <div id="prodOverlay" class="modal-overlay" hidden></div>
+  <div id="prodModal" class="prod-modal" hidden role="dialog" aria-modal="true" aria-label="Detalhes do produto">
+    <button id="prodClose" class="prod-close" aria-label="Fechar">✕</button>
+    <div class="prod-media">
+      <button id="prodPrev" class="prod-nav prod-prev" aria-label="Foto anterior" hidden>‹</button>
+      <div class="prod-main"><img id="prodImg" src="" alt="" /></div>
+      <button id="prodNext" class="prod-nav prod-next" aria-label="Próxima foto" hidden>›</button>
+      <div id="prodThumbs" class="prod-thumbs" hidden></div>
+    </div>
+    <div class="prod-info">
+      <div class="prod-tags">
+        <span id="prodCat" class="card-cat prod-cat"></span>
+        <span id="prodFlag" class="card-flag prod-flag" hidden>Novidade</span>
+      </div>
+      <h3 id="prodName" class="prod-name"></h3>
+      <p id="prodDesc" class="prod-desc"></p>
+      <div class="prod-foot">
+        <span id="prodPrice" class="prod-price"></span>
+        <button id="prodAdd" class="btn btn-green">Adicionar ao carrinho 🛒</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== POP-UP DE BOAS-VINDAS ===================== -->
+  <div id="welcomeOverlay" class="modal-overlay welcome-overlay" hidden></div>
+  <div id="welcomeModal" class="welcome-modal" hidden role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <button id="welcomeClose" class="welcome-close" aria-label="Fechar">✕</button>
+    <img class="welcome-cham" src="camaleao-sem-fundo.png" alt="Mascote Lygllyz" />
+    <span class="welcome-eyebrow">Smoke Culture 🦎</span>
+    <h3 id="welcomeTitle" class="welcome-title">Bem-vindo à <span>Lygllyz</span>!</h3>
+    <p class="welcome-text">Sedas, piteiras, bongs, kits e acessórios com preço justo e entrega rápida em Aracruz. Monta teu kit e finaliza no WhatsApp. 💚</p>
+    <div class="welcome-actions">
+      <button id="welcomeContinue" class="btn btn-green">Continuar</button>
+    </div>
+  </div>
+
+  <!-- Toast (pop-up de item adicionado) -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+    <img id="toastImg" class="toast-img" src="" alt="" />
+    <div class="toast-text">
+      <strong id="toastName"></strong>
+      <span>adicionado ao carrinho 🦎</span>
+    </div>
+    <button id="toastBtn" class="toast-btn">Ver carrinho</button>
+  </div>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a id="floatWhats" class="float-whats" href="#" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.607zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.017-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.247-.694.247-1.289.173-1.413z"/></svg>
+  </a>
+
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

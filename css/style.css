@@ -1,0 +1,1038 @@
+/* =====================================================================
+   LYGLLYZ TABACARIA — ESTILO (verde tóxico + roxo · smoke culture)
+   Paleta baseada na logo do calango.
+   ===================================================================== */
+
+:root{
+  --green:#46d62c;
+  --green-bright:#7bed5a;
+  --green-deep:#1f8a13;
+  --purple:#9b30ff;
+  --purple-deep:#6a16b8;
+  --purple-soft:#cba6ff;
+  --bg-900:#0d100c;
+  --bg-800:#141811;
+  --bg-700:#1b2117;
+  --panel:rgba(70,214,44,.06);
+  --text:#eaf5e6;
+  --muted:#9bb394;
+  --whats:#25d366;
+  --radius:16px;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --maxw:1180px;
+}
+
+*{
+  box-sizing:border-box;margin:0;padding:0;
+  /* impede o zoom por toque-duplo em TODOS os elementos (imagens, abas, botões…)
+     — touch-action não é herdada, por isso precisa estar no seletor universal */
+  touch-action:manipulation;
+  -ms-touch-action:manipulation;
+}
+[hidden]{display:none !important}   /* garante que o atributo hidden sempre esconda (ex.: campo de troco) */
+html{
+  scroll-behavior:smooth;
+  /* trava qualquer rolagem horizontal (inclui elementos fixos fora da tela, ex.: o carrinho) */
+  overflow-x:hidden;
+  width:100%;
+  /* fundo escuro também no html: evita as "barras brancas" ao arrastar/overscroll no iPhone */
+  background:#0d100c;
+  /* impede o "puxão" lateral (rubber-band) que revela área fora da página no iOS */
+  overscroll-behavior-x:none;
+}
+body{
+  /* impede o zoom por toque-duplo no celular (mantém o scroll/pan normais) */
+  touch-action:manipulation;
+  -ms-touch-action:manipulation;
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif;
+  background:
+    radial-gradient(1000px 620px at 84% -10%, rgba(155,48,255,.16) 0%, transparent 58%),
+    radial-gradient(880px 580px at -4% 96%, rgba(70,214,44,.14) 0%, transparent 56%),
+    radial-gradient(700px 520px at 102% 104%, rgba(255,46,136,.06) 0%, transparent 60%),
+    linear-gradient(180deg, #0f130c 0%, var(--bg-900) 46%, #080a06 100%);
+  color:var(--text);
+  line-height:1.6;
+  overflow-x:hidden;
+  overscroll-behavior-x:none;
+  width:100%;
+  max-width:100%;
+  position:relative;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+/* ---------- FUNDO (clean: glows suaves + grade de pontos com máscara) ---------- */
+.bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}
+/* blur menor + animação só com translate3d (composição na GPU, sem re-rasterizar o blur) */
+.smoke{position:absolute;border-radius:50%;filter:blur(30px);opacity:.14;
+  animation:drift 34s ease-in-out infinite;will-change:transform;transform:translateZ(0)}
+.smoke-1{width:460px;height:460px;left:-150px;top:0%;background:radial-gradient(circle,#46d62c,transparent 66%)}
+.smoke-2{width:400px;height:400px;right:-130px;top:36%;animation-delay:-11s;background:radial-gradient(circle,#9b30ff,transparent 66%)}
+.smoke-3{width:500px;height:500px;left:34%;bottom:-240px;animation-delay:-22s;background:radial-gradient(circle,#7bed5a,transparent 68%)}
+@keyframes drift{0%,100%{transform:translate3d(0,0,0)}50%{transform:translate3d(34px,-26px,0)}}
+/* grade de pontos sutil — textura "clean" que some nas bordas */
+.stars{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle, rgba(123,237,90,.14) 1.2px, transparent 1.7px);
+  background-size:30px 30px;
+  -webkit-mask-image:radial-gradient(ellipse 82% 72% at 50% 26%, #000 46%, transparent 100%);
+          mask-image:radial-gradient(ellipse 82% 72% at 50% 26%, #000 46%, transparent 100%);
+  opacity:.7;animation:none;
+}
+
+.site-header,.view,.site-footer{position:relative;z-index:1}
+
+/* ---------- HEADER ---------- */
+.site-header{
+  position:sticky;top:0;z-index:40;
+  background:linear-gradient(180deg,rgba(13,16,12,.99),rgba(13,16,12,.94));
+  border-bottom:1px solid rgba(70,214,44,.22);
+}
+.header-inner{max-width:var(--maxw);margin:0 auto;padding:.6rem 1.2rem;display:flex;align-items:center;gap:1rem}
+.brand{display:flex;align-items:center;gap:.65rem}
+.brand-logo{height:50px;width:auto;filter:drop-shadow(0 0 10px rgba(70,214,44,.45))}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-4px) rotate(2deg)}}
+.brand-text{display:flex;flex-direction:column;line-height:.92}
+.brand-name{font-family:"Rubik Wet Paint",cursive;font-size:1.5rem;color:var(--purple);text-shadow:1px 1px 0 #2a0a48,0 0 16px rgba(155,48,255,.45)}
+.brand-sub{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.62rem;letter-spacing:4px;color:var(--green-bright);margin-top:2px}
+
+.main-nav{margin-left:auto;display:flex;gap:.5rem}
+.nav-tab{
+  background:transparent;border:1px solid rgba(155,48,255,.3);color:var(--text);
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.78rem;letter-spacing:1px;
+  padding:.55rem 1.2rem;border-radius:999px;cursor:pointer;transition:.2s;
+}
+.nav-tab:hover{border-color:var(--green);color:var(--green-bright)}
+.nav-tab.is-active{background:linear-gradient(135deg,var(--purple-deep),var(--purple));color:#fff;border-color:transparent;box-shadow:0 6px 18px rgba(155,48,255,.4)}
+
+.cart-btn{position:relative;background:transparent;border:1px solid rgba(70,214,44,.4);color:var(--green-bright);width:46px;height:46px;border-radius:12px;cursor:pointer;display:grid;place-items:center;transition:.2s}
+.cart-btn:hover{background:rgba(70,214,44,.12);transform:translateY(-2px)}
+.cart-count{position:absolute;top:-7px;right:-7px;background:var(--green);color:#0d100c;font-size:.7rem;font-weight:700;min-width:20px;height:20px;border-radius:50%;display:grid;place-items:center;padding:0 4px;transition:transform .18s}
+
+/* botão de alternância de tema (claro/escuro) */
+.theme-toggle{background:transparent;border:1px solid rgba(155,48,255,.4);color:var(--purple-soft);width:46px;height:46px;border-radius:12px;cursor:pointer;display:grid;place-items:center;transition:.2s}
+.theme-toggle:hover{background:rgba(155,48,255,.12);transform:translateY(-2px);color:#fff}
+.theme-toggle .ic-sun{display:block}
+.theme-toggle .ic-moon{display:none}
+[data-theme="light"] .theme-toggle{color:var(--purple-deep);border-color:rgba(106,22,184,.35)}
+[data-theme="light"] .theme-toggle:hover{color:#fff;background:var(--purple)}
+[data-theme="light"] .theme-toggle .ic-sun{display:none}
+[data-theme="light"] .theme-toggle .ic-moon{display:block}
+
+/* ---------- VIEWS (abas separadas) ---------- */
+.view{display:none}
+.view.is-active{display:block;animation:fadein .35s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ---------- HERO (estilo LYGLLYZ OUTLET — texto à esquerda, mascote à direita) ---------- */
+.hero{
+  max-width:var(--maxw);margin:0 auto;padding:3rem 1.2rem 2rem;position:relative;
+  display:grid;grid-template-columns:1.05fr .95fr;gap:1.6rem;align-items:center;text-align:left;
+}
+.hero-splash{position:absolute;top:-4%;right:-2%;width:520px;height:520px;max-width:90vw;background:radial-gradient(circle,rgba(70,214,44,.22),transparent 62%);filter:blur(12px);z-index:-1}
+.hero-text{position:relative;z-index:1}
+.hero-eyebrow{
+  display:inline-block;font-family:"Bricolage Grotesque",system-ui,sans-serif;
+  font-weight:800;font-size:.74rem;letter-spacing:3px;text-transform:uppercase;
+  color:var(--green-bright);margin-bottom:.85rem;text-shadow:0 0 16px rgba(70,214,44,.4);
+}
+.hero-title{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;
+  line-height:1.04;letter-spacing:-1px;font-size:clamp(2rem,5.4vw,3.9rem);color:var(--text);
+}
+.hero-title .hero-line{display:block;white-space:nowrap}
+/* em telas bem estreitas, permite quebra pra não cortar o texto */
+@media (max-width:430px){
+  .hero-title{font-size:clamp(1.9rem,8.4vw,2.4rem)}
+  .hero-title .hero-line{white-space:normal}
+}
+.hero-title .hero-accent{
+  color:var(--green-bright);
+  text-shadow:0 0 18px rgba(70,214,44,.45);
+}
+.hero-desc{color:var(--muted);max-width:46ch;margin:1.1rem 0 0;font-size:1.02rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.6rem}
+.hero-art{position:relative;display:grid;place-items:center;min-height:240px}
+.hero-cham{width:min(420px,94%);margin:0;filter:drop-shadow(0 18px 40px rgba(70,214,44,.4));animation:float 5.5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-16px) rotate(1.5deg)}}
+
+/* ---------- BOTÕES ---------- */
+.btn{display:inline-block;padding:.85rem 1.7rem;border-radius:999px;font-weight:600;cursor:pointer;border:none;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.82rem;letter-spacing:1px;transition:.22s;text-align:center}
+.btn-green{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#08210b;box-shadow:0 8px 24px rgba(70,214,44,.35)}
+.btn-green:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(70,214,44,.5)}
+.btn-ghost{background:transparent;color:var(--purple-soft);border:1px solid rgba(155,48,255,.5)}
+.btn-ghost:hover{background:rgba(155,48,255,.12)}
+.btn-whats{background:linear-gradient(135deg,var(--whats),#1aa34a);color:#fff;width:100%}
+.btn-whats:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 26px rgba(37,211,102,.4)}
+.btn-whats:disabled{opacity:.45;cursor:not-allowed}
+
+/* ---------- TÍTULOS ---------- */
+.section-title{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(1.4rem,4vw,2.2rem);color:var(--green-bright);letter-spacing:1px;position:relative;display:inline-block}
+.section-title::after{content:"";display:block;width:55%;height:3px;margin-top:.5rem;background:linear-gradient(90deg,var(--purple),transparent)}
+
+/* ---------- LOJA / GRID ---------- */
+.loja{max-width:var(--maxw);margin:0 auto;padding:1rem 1.2rem 3rem}
+.section-head{display:flex;justify-content:center;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:1.6rem;margin-bottom:1.8rem}
+.search-box{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid rgba(70,214,44,.25);border-radius:999px;padding:.7rem 1.2rem;width:100%;max-width:460px;color:var(--muted)}
+.search-box input{background:transparent;border:none;color:var(--text);outline:none;width:100%;font-family:inherit}
+.search-box input::placeholder{color:var(--muted)}
+
+.tabs{display:flex;gap:.55rem;overflow-x:auto;padding:.4rem 0 1.2rem;scrollbar-width:thin;scrollbar-color:var(--green-deep) transparent}
+.tabs::-webkit-scrollbar{height:6px}
+.tabs::-webkit-scrollbar-thumb{background:var(--green-deep);border-radius:999px}
+.tab{flex:0 0 auto;background:rgba(255,255,255,.04);border:1px solid rgba(70,214,44,.25);color:var(--text);padding:.5rem 1.05rem;border-radius:999px;cursor:pointer;font-family:inherit;font-weight:500;font-size:.9rem;white-space:nowrap;transition:.2s}
+.tab:hover{border-color:var(--purple);color:var(--purple-soft)}
+.tab.is-active{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#08210b;border-color:transparent;box-shadow:0 6px 18px rgba(70,214,44,.4);font-weight:600}
+
+.grid{display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+.card{background:linear-gradient(180deg,rgba(31,138,19,.16),rgba(20,24,17,.75));border:1px solid rgba(70,214,44,.18);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:.25s;animation:rise .4s ease both;content-visibility:auto;contain-intrinsic-size:auto 400px}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.card:hover{transform:translateY(-6px);border-color:var(--green);box-shadow:var(--shadow)}
+.card-media{aspect-ratio:4/3;overflow:hidden;position:relative;background:var(--bg-800);cursor:pointer}
+.card-media img{width:100%;height:100%;transition:transform .35s}
+.card-media-bg{position:absolute;inset:0;z-index:0;object-fit:cover;object-position:center;filter:blur(16px) brightness(.78) saturate(1.02);transform:scale(1.18)}
+.card-media-fg{position:relative;z-index:1;object-fit:contain;object-position:center}
+.card:hover .card-media-fg{transform:scale(1.06)}
+.card-cat{z-index:2;position:absolute;top:.6rem;left:.6rem;font-size:.64rem;letter-spacing:1px;text-transform:uppercase;background:rgba(13,16,12,.78);color:var(--green-bright);padding:.22rem .6rem;border-radius:999px;border:1px solid rgba(70,214,44,.35);font-weight:600}
+.card-body{padding:1rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.card-name{font-size:1.02rem;color:var(--text);font-weight:600;line-height:1.2}
+.card-desc{font-size:.82rem;color:var(--muted);flex:1}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem}
+.card-price{font-weight:700;font-size:1.18rem;color:var(--green-bright)}
+.card-add{background:linear-gradient(135deg,var(--green),var(--green-deep));color:#08210b;border:none;width:42px;height:42px;border-radius:12px;font-size:1.4rem;cursor:pointer;transition:.2s;display:grid;place-items:center;line-height:1}
+.card-add:hover{transform:scale(1.1) rotate(90deg)}
+.empty-msg{text-align:center;color:var(--muted);padding:3rem 0;font-size:1.1rem}
+
+/* ---------- A LOJA (sobre) ---------- */
+.view-loja{max-width:var(--maxw);margin:0 auto;padding:2.5rem 1.2rem}
+.sobre-inner{display:grid;grid-template-columns:.8fr 1.2fr;gap:2.5rem;align-items:center;background:linear-gradient(135deg,rgba(31,138,19,.14),rgba(13,16,12,.5));border:1px solid rgba(70,214,44,.2);border-radius:24px;padding:2.5rem}
+.sobre-art{position:relative;display:grid;place-items:center;min-height:280px}
+.splash-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,rgba(155,48,255,.28),transparent 60%);filter:blur(8px)}
+.sobre-cham{width:min(320px,80%);border-radius:20px;filter:drop-shadow(0 14px 36px rgba(0,0,0,.5));animation:float 6s ease-in-out infinite}
+.sobre-text p{color:var(--muted);margin:1rem 0}
+.sobre-text strong{color:var(--green-bright)}
+.sobre-duvida{color:var(--purple-soft) !important;font-weight:500}
+.contato-list{list-style:none;margin:1.4rem 0;display:flex;flex-direction:column;gap:.7rem}
+.contato-list li{display:flex;align-items:center;gap:.7rem}
+.ci-emoji{font-size:1.2rem}
+.contato-list a{color:var(--green-bright);transition:.2s}
+.contato-list a:hover{color:var(--purple-soft)}
+
+/* ---------- FOOTER ---------- */
+.site-footer{text-align:center;padding:3rem 1.2rem;border-top:1px solid rgba(70,214,44,.2);margin-top:2rem}
+.footer-graffiti{font-family:"Permanent Marker",cursive;color:var(--green-bright);font-size:1.4rem;letter-spacing:1px}
+.footer-small{color:var(--muted);font-size:.8rem;margin-top:.6rem}
+
+/* ---------- CARRINHO ---------- */
+.cart-overlay{position:fixed;inset:0;background:rgba(6,8,5,.72);backdrop-filter:blur(3px);z-index:50}
+.cart{position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);z-index:60;background:linear-gradient(180deg,var(--bg-800),var(--bg-900));border-left:1px solid rgba(70,214,44,.3);box-shadow:var(--shadow);transform:translateX(105%);transition:transform .3s ease;display:flex;flex-direction:column}
+.cart.is-open{transform:translateX(0)}
+.cart-header{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:1.3rem;border-bottom:1px solid rgba(70,214,44,.2)}
+.cart-header h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--green-bright);font-size:1.1rem;letter-spacing:1px;flex:1;text-align:center}
+.cart-close,.cart-back{background:transparent;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;transition:.2s;line-height:1}
+.cart-close:hover{color:var(--green);transform:rotate(90deg)}
+.cart-back{color:var(--green-bright);font-size:1.5rem}
+.cart-back:hover{transform:translateX(-3px)}
+
+/* etapas do carrinho (Itens -> Finalizar) */
+.cart-step{flex:1;display:flex;flex-direction:column;min-height:0}
+.cart-step[hidden]{display:none}
+.checkout-body{overflow-y:auto;padding:1.2rem 1.3rem;gap:1rem}
+.cart-items{flex:1;overflow-y:auto;padding:1rem 1.3rem;display:flex;flex-direction:column;gap:.9rem}
+.cart-item{display:flex;gap:.8rem;align-items:center;background:rgba(255,255,255,.04);border-radius:12px;padding:.6rem}
+.ci-icon{width:52px;height:52px;border-radius:10px;overflow:hidden;flex:0 0 auto;background:var(--bg-700)}
+.ci-icon img{width:100%;height:100%;object-fit:cover}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-size:.9rem;color:var(--text);font-weight:500;line-height:1.2}
+.ci-price{font-size:.78rem;color:var(--muted)}
+.ci-qty{display:flex;align-items:center;gap:.5rem}
+.ci-qty button{width:26px;height:26px;border-radius:8px;border:1px solid rgba(70,214,44,.4);background:transparent;color:var(--green-bright);cursor:pointer;font-size:1rem;line-height:1}
+.ci-qty button:hover{background:rgba(70,214,44,.15)}
+.ci-qty span{min-width:18px;text-align:center}
+.ci-remove{background:transparent;border:none;color:#e57373;cursor:pointer;font-size:1.05rem}
+.cart-empty{text-align:center;color:var(--muted);padding:2.5rem 1.3rem}
+.cart-empty span{font-size:.85rem;opacity:.8}
+.cart-footer{padding:1.2rem 1.3rem;border-top:1px solid rgba(70,214,44,.2)}
+.cart-total{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;font-size:1.05rem}
+.cart-total strong{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:700;color:var(--green);font-size:1.35rem;font-variant-numeric:tabular-nums}
+.cart-note{font-size:.72rem;color:var(--muted);margin-top:.7rem;text-align:center}
+
+/* ---------- CHECKOUT (FINALIZAR PEDIDO — dentro do carrinho) ---------- */
+.field{display:flex;flex-direction:column;gap:.35rem;border:none;padding:0;margin:0}
+.field>span,.field-label{font-size:.85rem;color:var(--purple-soft);font-weight:500}
+.field input,.field textarea,.field select{
+  background:rgba(255,255,255,.05);border:1px solid rgba(70,214,44,.25);border-radius:10px;
+  padding:.7rem .85rem;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;transition:.2s;width:100%;resize:vertical;
+}
+.field select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%2346d62c' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .85rem center;padding-right:2.2rem}
+.field select option{background:var(--bg-800);color:var(--text)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green);background:rgba(70,214,44,.08)}
+.field input:disabled{opacity:.4;cursor:not-allowed}
+.field input::placeholder,.field textarea::placeholder{color:var(--muted)}
+.opts{display:flex;flex-wrap:wrap;gap:.5rem}
+.opt{
+  display:flex;align-items:center;gap:.4rem;background:rgba(255,255,255,.04);
+  border:1px solid rgba(70,214,44,.25);border-radius:10px;padding:.55rem .8rem;
+  cursor:pointer;font-size:.88rem;transition:.2s;flex:1 1 auto;
+}
+.opt:hover{border-color:var(--green)}
+.opt:has(input:checked){background:rgba(70,214,44,.14);border-color:var(--green);color:var(--green-bright)}
+.opt input{accent-color:var(--green);width:auto}
+.opts-pay .opt{flex:1 1 44%}
+.field-hint{font-size:.74rem;color:var(--muted);margin-top:.3rem;line-height:1.35}
+.field-row{display:flex;gap:.6rem;align-items:flex-end}
+.field-num{flex:1}
+.opt-sn{flex:0 0 auto;white-space:nowrap}
+
+.checkout-summary{background:rgba(255,255,255,.04);border:1px solid rgba(155,48,255,.22);border-radius:12px;padding:.9rem 1rem}
+.checkout-summary h4{font-size:.8rem;letter-spacing:1px;text-transform:uppercase;color:var(--purple-soft);margin-bottom:.6rem}
+.checkout-summary .ck-line{display:flex;justify-content:space-between;font-size:.86rem;color:var(--text);padding:.15rem 0}
+.checkout-summary .ck-line span:first-child{color:var(--muted)}
+.checkout-total{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;padding-top:.6rem;border-top:1px solid rgba(70,214,44,.2);font-size:1rem}
+.checkout-total strong{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:700;color:var(--green);font-size:1.25rem;font-variant-numeric:tabular-nums}
+.checkout-error{color:#ff8080;font-size:.85rem;background:rgba(255,80,80,.1);border:1px solid rgba(255,80,80,.3);border-radius:10px;padding:.6rem .8rem}
+.btn-back{padding:.6rem 1rem;font-size:.72rem}
+
+/* ---------- POP-UP DE PRODUTO ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(6,8,5,.8);backdrop-filter:blur(4px);z-index:70}
+.prod-modal{
+  position:fixed;z-index:80;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(820px,94vw);max-height:92vh;overflow:hidden;
+  display:grid;grid-template-columns:1fr 1fr;
+  background:linear-gradient(180deg,var(--bg-800),var(--bg-900));
+  border:1px solid rgba(70,214,44,.3);border-radius:20px;box-shadow:var(--shadow);
+  animation:popin .25s ease both;
+}
+@keyframes popin{from{opacity:0;transform:translate(-50%,-50%) scale(.95)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.prod-close{position:absolute;top:.7rem;right:.8rem;z-index:2;background:rgba(13,16,12,.7);border:1px solid rgba(70,214,44,.3);color:var(--text);width:38px;height:38px;border-radius:50%;font-size:1.1rem;cursor:pointer;transition:.2s}
+.prod-close:hover{color:var(--green);transform:rotate(90deg)}
+.prod-media{background:#fff;display:flex;flex-direction:column;max-height:92vh;position:relative}
+.prod-main{flex:1;display:grid;place-items:center;min-height:0;overflow:hidden}
+.prod-main img{width:100%;height:100%;object-fit:contain;max-height:100%}
+.prod-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:38px;border-radius:50%;border:none;background:rgba(13,16,12,.65);color:#fff;font-size:1.6rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:.2s}
+.prod-nav:hover{background:var(--green-deep)}
+.prod-prev{left:.6rem}
+.prod-next{right:.6rem}
+.prod-thumbs{display:flex;gap:.45rem;padding:.6rem;justify-content:center;flex-wrap:wrap;background:#ececec}
+.prod-thumb{width:50px;height:50px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.15s}
+.prod-thumb:hover{transform:scale(1.05)}
+.prod-thumb.active{border-color:var(--green);box-shadow:0 0 0 2px rgba(70,214,44,.3)}
+.prod-info{padding:2rem 1.8rem;display:flex;flex-direction:column;gap:.8rem;overflow-y:auto}
+.prod-cat{position:static;align-self:flex-start}
+.prod-name{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:1.4rem;color:var(--green-bright);line-height:1.15}
+.prod-desc{color:var(--smoke);font-size:.98rem;flex:1}
+.prod-foot{display:flex;flex-direction:column;gap:1rem;margin-top:.5rem}
+.prod-price{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:700;font-size:1.9rem;color:var(--green);font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.prod-foot .btn{width:100%}
+@media (max-width:640px){
+  .prod-modal{grid-template-columns:1fr;width:min(420px,92vw);max-height:88vh;overflow-y:auto}
+  .prod-media{max-height:none}
+  .prod-main{height:34vh;max-height:300px}
+  .prod-thumbs{padding:.45rem}
+  .prod-thumb{width:42px;height:42px}
+  .prod-info{padding:1.2rem 1.1rem;gap:.6rem}
+  .prod-name{font-size:1.15rem}
+  .prod-desc{font-size:.92rem}
+  .prod-price{font-size:1.5rem}
+  .prod-foot{gap:.7rem;margin-top:.2rem}
+  .prod-nav{width:34px;height:34px;font-size:1.4rem}
+}
+
+/* ---------- TOAST (item adicionado) ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;z-index:90;transform:translate(-50%,140%);
+  display:flex;align-items:center;gap:.8rem;max-width:92vw;
+  background:linear-gradient(135deg,rgba(31,138,19,.96),rgba(20,24,17,.98));
+  border:1px solid var(--green);border-radius:14px;padding:.7rem .9rem;
+  box-shadow:0 14px 40px rgba(0,0,0,.5),0 0 22px rgba(70,214,44,.35);
+  opacity:0;transition:transform .35s cubic-bezier(.2,1.2,.3,1),opacity .3s;
+}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast-img{width:46px;height:46px;border-radius:10px;object-fit:cover;flex:0 0 auto;background:var(--bg-700)}
+.toast-text{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.toast-text strong{color:#fff;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw}
+.toast-text span{color:var(--green-bright);font-size:.78rem}
+.toast-btn{
+  background:var(--green);color:#08210b;border:none;border-radius:10px;
+  padding:.5rem .85rem;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.68rem;letter-spacing:.5px;
+  cursor:pointer;flex:0 0 auto;transition:.2s;
+}
+.toast-btn:hover{transform:translateY(-2px);background:var(--green-bright)}
+
+/* ---------- FLOAT WHATS ---------- */
+.float-whats{position:fixed;bottom:22px;right:22px;z-index:45;width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--whats),#1aa34a);display:grid;place-items:center;color:#fff;box-shadow:0 10px 26px rgba(37,211,102,.5);animation:bounce 2.6s ease-in-out infinite}
+.float-whats:hover{transform:scale(1.1)}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ======================================================================
+   STREET / GRAFFITI MODE — textura, stickers, tinta e tipografia ousada
+   (vem depois das regras acima e as sobrescreve por ordem de cascata)
+   ====================================================================== */
+
+/* tinta extra de spray + preto de contorno */
+:root{
+  --paint-yellow:#ffe23d;
+  --paint-pink:#ff2e88;
+  --paint-cyan:#27e6d6;
+  --ink:#0b0d09;
+}
+
+/* grão de papel-grafite por cima do fundo (sutil, dá textura) */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.06;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* trama de pontos (concreto/halftone) + vinheta nas bordas pra dar foco */
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(rgba(123,237,90,.05) 1px, transparent 1.5px) 0 0/26px 26px,
+    radial-gradient(130% 120% at 50% 42%, transparent 56%, rgba(0,0,0,.6) 100%);
+}
+
+/* respingo de tinta atrás do nome no hero */
+.hero{overflow:visible}
+.wordmark{position:relative}
+.wordmark::before{
+  content:"";position:absolute;z-index:-1;left:50%;top:46%;
+  transform:translate(-50%,-50%) rotate(-3deg);
+  width:118%;height:78%;
+  background:
+    radial-gradient(closest-side, rgba(155,48,255,.38), transparent 72%),
+    radial-gradient(closest-side at 28% 62%, rgba(70,214,44,.30), transparent 70%),
+    radial-gradient(closest-side at 78% 38%, rgba(255,46,136,.22), transparent 70%);
+  filter:blur(7px);border-radius:46% 54% 60% 40% / 55% 45% 55% 45%;
+}
+
+/* tagline vira um adesivo torto */
+.hero-tagline{
+  display:inline-block;background:rgba(11,13,9,.55);
+  border:1.5px dashed rgba(123,237,90,.55);border-radius:12px;
+  padding:.55rem 1.05rem;
+}
+
+/* BOTÕES = adesivos com contorno preto e sombra dura */
+.btn{border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);text-transform:uppercase}
+.btn:hover{transform:translateY(-3px)}
+.btn-green:hover{box-shadow:6px 7px 0 var(--ink)}
+.btn-ghost{border-color:var(--purple);box-shadow:4px 4px 0 rgba(155,48,255,.5)}
+.btn-whats{border-color:var(--ink)}
+.btn-whats:hover:not(:disabled){box-shadow:6px 7px 0 rgba(8,33,11,.8)}
+
+/* CARDS = cartazes colados (contorno preto + sombra offset + leve torção no hover) */
+.card{border:2px solid rgba(11,13,9,.55);box-shadow:6px 6px 0 rgba(11,13,9,.5);border-radius:14px}
+.card:hover{transform:translateY(-6px);border-color:var(--green);box-shadow:9px 11px 0 rgba(70,214,44,.4)}
+.card-media{border-bottom:2px solid rgba(11,13,9,.55)}
+
+/* selo de categoria colado torto */
+.card-cat{
+  z-index:2;background:var(--green);color:var(--ink);
+  border:1.5px solid var(--ink);box-shadow:2px 2px 0 rgba(0,0,0,.55);
+  font-weight:800;letter-spacing:.5px;
+}
+
+/* nome marcante + preço tipo etiqueta pintada à mão */
+.card-name{text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+.card-price{
+  font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:700;color:#ece7da;
+  font-size:1.3rem;font-variant-numeric:tabular-nums;letter-spacing:.2px;
+  text-shadow:0 2px 5px rgba(11,13,9,.45);
+}
+.card-add{border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.card-add:hover{transform:scale(1.08) rotate(90deg)}
+
+/* ABAS = adesivos; a ativa fica torta com sombra dura */
+.tab{border:1.5px solid rgba(11,13,9,.45)}
+.tab.is-active{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+/* TÍTULO de seção com risco de spray colorido */
+.section-title::after{height:6px;border-radius:2px;background:linear-gradient(90deg,var(--paint-pink),var(--purple),transparent)}
+
+/* card "A Loja" com fita crepe colada no canto */
+.sobre-inner{position:relative;border:2px solid rgba(11,13,9,.5);box-shadow:10px 10px 0 rgba(11,13,9,.35)}
+.sobre-inner::before{
+  content:"";position:absolute;top:-15px;left:34px;width:160px;height:36px;z-index:2;
+  background:rgba(255,226,61,.72);
+  box-shadow:0 2px 7px rgba(0,0,0,.35);
+  transform:rotate(-3deg);transform-origin:center;
+}
+
+/* assinatura do rodapé maior e torta */
+.footer-graffiti{font-size:1.9rem;color:var(--paint-yellow);text-shadow:2px 2px 0 var(--ink)}
+
+/* botão do carrinho ganha contorno de sticker */
+.cart-btn{border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.cart-btn:hover{box-shadow:4px 5px 0 var(--ink)}
+
+/* preço no pop-up de produto com cara de etiqueta pintada */
+.prod-price{color:#ece7da;text-shadow:0 2px 5px rgba(11,13,9,.45)}
+
+/* ======================================================================
+   REFINOS DE DESIGN — polimento de layout, ritmo e legibilidade
+   (camada final: vem por último e sobrescreve o necessário)
+   ====================================================================== */
+
+/* ---- HERO mais compacto e intencional ---- */
+.hero{padding:2.2rem 1.2rem 1.4rem}
+.hero-cham{width:min(300px,62vw);margin-bottom:-.6rem}
+.wordmark{margin-top:-.8rem}
+.hero-tagline{
+  color:var(--text);opacity:.92;margin:1rem auto 0;max-width:560px;
+  font-size:1rem;line-height:1.55;
+}
+.hero-actions{margin-top:1.4rem}
+
+/* faixa de vantagens/confiança abaixo do hero */
+.hero-badges{
+  list-style:none;display:flex;flex-wrap:wrap;justify-content:flex-start;
+  gap:.6rem .7rem;margin:1.6rem 0 0;max-width:680px;
+}
+.hero-badges li{
+  display:flex;align-items:center;gap:.45rem;
+  font-size:.82rem;font-weight:600;color:var(--text);
+  background:rgba(11,13,9,.5);border:1.5px solid rgba(123,237,90,.32);
+  border-radius:999px;padding:.42rem .85rem;
+  box-shadow:2px 2px 0 rgba(11,13,9,.5);
+}
+.hero-badges li span{font-size:1rem;line-height:1}
+
+/* ---- CABEÇALHO DA SEÇÃO DE PRODUTOS ---- */
+.loja-head{text-align:center;margin-top:.6rem}
+.loja-head .section-title{font-size:clamp(1.5rem,4.4vw,2.4rem)}
+.loja-head .section-title::after{margin-left:auto;margin-right:auto}
+.loja-sub{color:var(--muted);margin-top:.7rem;font-size:.95rem}
+.loja-sub #prodCount{color:var(--green-bright);font-weight:700}
+.section-head{margin-top:1.2rem;margin-bottom:1rem}
+
+/* ---- ABAS FIXAS (sticky) com bordas suavizadas ---- */
+.tabs{
+  position:sticky;top:62px;z-index:30;
+  padding:.7rem .2rem;margin:0 -.2rem 1.4rem;
+  background:linear-gradient(180deg,rgba(13,16,12,.99),rgba(13,16,12,.95));
+  border-bottom:1px solid rgba(70,214,44,.16);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);
+          mask-image:linear-gradient(90deg,transparent,#000 3%,#000 97%,transparent);
+}
+
+/* ---- CARDS: selo de novidade + revelação ao rolar ---- */
+.card-media::after{
+  content:"";position:absolute;inset:auto 0 0 0;height:38%;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(11,13,9,.18));
+}
+.card-flag{
+  position:absolute;top:.6rem;right:-2px;z-index:3;
+  background:var(--paint-pink);color:#fff;
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;
+  padding:.28rem .7rem;border:1.5px solid var(--ink);border-radius:8px 0 0 8px;
+  box-shadow:2px 2px 0 rgba(0,0,0,.55);
+}
+.card-add{transition:transform .2s,box-shadow .2s,background .2s}
+.card-add:active{transform:scale(.92)}
+.card-foot{padding-top:.5rem;border-top:1px dashed rgba(123,237,90,.18)}
+
+/* reveal: começa apagado e sobe ao entrar na tela (sem o flash do "rise") */
+.card.reveal{animation:none;opacity:0;transform:translateY(12px);
+  transition:opacity .26s ease var(--d,0s),transform .26s cubic-bezier(.2,.8,.3,1) var(--d,0s)}
+.card.reveal.in{opacity:1;transform:none}
+
+/* selo de novidade dentro do pop-up */
+.prod-tags{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.prod-flag{position:static}
+
+/* ---- A LOJA: contatos em formato de cartão ---- */
+.contato-list{gap:.55rem}
+.contato-list li{
+  background:rgba(255,255,255,.035);border:1.5px solid rgba(70,214,44,.18);
+  border-radius:12px;padding:.65rem .8rem;align-items:center;
+  transition:border-color .2s,transform .2s,background .2s;
+}
+.contato-list li:hover{border-color:var(--green);transform:translateX(3px);background:rgba(70,214,44,.06)}
+.ci-body{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.ci-label{font-size:.66rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+.ci-body a,.ci-body span:not(.ci-label){font-weight:600;word-break:break-word}
+
+/* rótulo na fita crepe do card "A Loja" — alinhado e centralizado sobre a fita */
+.sobre-inner::after{
+  content:"LYGLLYZ";position:absolute;top:-15px;left:34px;width:160px;height:36px;z-index:3;
+  display:flex;align-items:center;justify-content:center;
+  font-family:"Permanent Marker",cursive;font-size:1.1rem;letter-spacing:1px;line-height:1;
+  color:var(--ink);transform:rotate(-3deg);transform-origin:center;pointer-events:none;
+}
+
+/* ---- RODAPÉ ---- */
+.site-footer{margin-top:3rem}
+.footer-graffiti{transform:rotate(-1.5deg)}
+
+/* ---- ACESSIBILIDADE: foco visível ---- */
+a:focus-visible,button:focus-visible,input:focus-visible,
+select:focus-visible,textarea:focus-visible,.tab:focus-visible{
+  outline:3px solid var(--paint-cyan);outline-offset:2px;border-radius:6px;
+}
+
+/* sob redução de movimento, mostra os cards imediatamente */
+@media (prefers-reduced-motion:reduce){
+  .card.reveal{opacity:1 !important;transform:none !important}
+}
+
+/* ---------- REDUÇÃO DE MOVIMENTO / MÁQUINAS FRACAS ---------- */
+@media (prefers-reduced-motion:reduce){
+  .smoke{animation:none}
+  .hero-cham,.sobre-cham{animation:none}
+  .card{animation:none}
+  *{scroll-behavior:auto!important}
+}
+
+/* ---------- RESPONSIVO ---------- */
+@media (max-width:780px){
+  /* performance no mobile: fundo estático, menos blur, header sem backdrop-filter */
+  .smoke{animation:none;filter:blur(46px)}
+  .hero-cham,.sobre-cham{animation:none}
+  .site-header{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .tabs{position:static;backdrop-filter:none;margin-bottom:1.1rem}
+  .hero-badges li{font-size:.76rem;padding:.38rem .7rem}
+  .hero-cham{width:min(240px,58vw)}
+  .main-nav{order:3;margin-left:0;width:100%;justify-content:center;gap:.4rem}
+  .nav-tab{padding:.36rem .95rem;font-size:.72rem}
+  .header-inner{flex-wrap:wrap;justify-content:space-between;row-gap:.4rem}
+  .hero{grid-template-columns:1fr;text-align:center;gap:.6rem;padding-top:2rem}
+  .hero-art{order:-1}
+  .hero-splash{top:0;right:auto;left:50%;transform:translateX(-50%)}
+  .hero-eyebrow{margin-bottom:.5rem}
+  .hero-desc{margin-left:auto;margin-right:auto}
+  .hero-actions,.hero-badges{justify-content:center}
+  .hero-badges{margin-left:auto;margin-right:auto}
+  .sobre-inner{grid-template-columns:1fr;padding:1.6rem;text-align:center}
+  .sobre-art{order:-1}
+  .contato-list li{justify-content:center}
+  .section-head{justify-content:center}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important}html{scroll-behavior:auto}}
+
+/* ======================================================================
+   AFINAÇÃO TIPOGRÁFICA — Bricolage Grotesque (títulos) + Plus Jakarta Sans
+   Bricolage no peso padrão é mais leve que a antiga Bungee: aqui damos
+   presença (peso alto) e espaçamento equilibrado para um ar comercial.
+   ====================================================================== */
+.brand-sub,.nav-tab,.wordmark-sub,.btn,.section-title,
+.cart-header h3,.prod-name,.toast-btn,.card-flag{
+  font-weight:800;
+}
+.nav-tab{letter-spacing:.3px;text-transform:uppercase;font-size:.74rem}
+.btn{letter-spacing:.4px}
+.section-title{letter-spacing:0}
+.wordmark-sub{letter-spacing:5px;font-weight:700}
+.brand-sub{letter-spacing:3px;font-weight:700}
+.prod-name{letter-spacing:0}
+.card-name{font-weight:700}
+/* títulos com leve aperto entre letras dão um look mais moderno/comercial */
+.section-title,.prod-name,.cart-header h3{letter-spacing:-.2px}
+
+/* ======================================================================
+   REFINAMENTO COMERCIAL — CARRINHO + CHECKOUT
+   itens em cartão, seletor de quantidade em pílula, rótulos enxutos e
+   resumo destacado — mesmo padrão do restante do site.
+   ====================================================================== */
+
+/* cabeçalho do carrinho com fio de destaque */
+.cart-header{padding:1.2rem 1.3rem;border-bottom:1px solid rgba(70,214,44,.18)}
+.cart-header h3{font-size:1.02rem;letter-spacing:.2px}
+
+/* ITENS como cartões */
+.cart-items{padding:1.1rem 1.2rem;gap:.7rem}
+.cart-item{
+  background:linear-gradient(180deg,rgba(31,138,19,.10),rgba(255,255,255,.03));
+  border:1.5px solid rgba(70,214,44,.16);border-radius:14px;padding:.7rem;gap:.75rem;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.cart-item:hover{border-color:rgba(70,214,44,.42);transform:translateY(-1px);box-shadow:3px 3px 0 rgba(11,13,9,.4)}
+.ci-icon{width:58px;height:58px;border-radius:10px;border:1.5px solid rgba(11,13,9,.5);box-shadow:2px 2px 0 rgba(11,13,9,.35)}
+.ci-name{font-weight:700;letter-spacing:-.1px}
+.ci-price{font-size:.76rem;color:var(--muted)}
+
+/* seletor de quantidade em pílula coesa */
+.ci-qty{
+  background:rgba(11,13,9,.5);border:1.5px solid rgba(70,214,44,.28);
+  border-radius:999px;padding:.16rem;gap:.1rem;
+}
+.ci-qty button{
+  width:28px;height:28px;border:none;border-radius:50%;background:transparent;
+  color:var(--green-bright);font-size:1.15rem;font-weight:700;transition:background .15s,transform .1s;
+}
+.ci-qty button:hover{background:rgba(70,214,44,.18)}
+.ci-qty button:active{transform:scale(.9)}
+.ci-qty span{min-width:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.ci-remove{opacity:.65;transition:opacity .2s,transform .2s}
+.ci-remove:hover{opacity:1;transform:scale(1.12)}
+
+/* rodapé / total */
+.cart-footer{padding:1.2rem 1.3rem;border-top:1px solid rgba(70,214,44,.18)}
+.cart-total{font-size:1rem}
+.cart-total span:first-child{color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-size:.78rem;font-weight:600}
+.cart-total strong{font-size:1.5rem}
+.cart-note{
+  background:rgba(255,255,255,.03);border:1px dashed rgba(123,237,90,.25);
+  border-radius:10px;padding:.6rem .7rem;margin-top:.85rem;line-height:1.45;
+}
+
+/* CHECKOUT — rótulos enxutos estilo formulário comercial */
+.checkout-body{gap:1.1rem;padding:1.3rem}
+.field>span,.field-label{
+  font-size:.72rem;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--purple-soft);font-weight:700;
+}
+.field input,.field textarea,.field select{border-radius:12px;padding:.8rem .9rem}
+.field input:focus,.field textarea:focus,.field select:focus{
+  box-shadow:0 0 0 3px rgba(70,214,44,.14);
+}
+.opt{border-radius:12px;padding:.62rem .85rem;font-weight:500;transition:.18s}
+.opt:has(input:checked){box-shadow:2px 2px 0 rgba(8,33,11,.5)}
+
+/* resumo do pedido em destaque */
+.checkout-summary{
+  background:linear-gradient(180deg,rgba(155,48,255,.10),rgba(255,255,255,.03));
+  border:1.5px solid rgba(155,48,255,.28);border-radius:14px;padding:1rem 1.1rem;
+}
+.checkout-summary h4{font-size:.74rem;letter-spacing:1.2px;color:var(--purple-soft)}
+.checkout-total strong{font-size:1.4rem}
+
+/* botão final de envio com presença */
+.checkout-body .btn-whats{padding:1rem 1.7rem;font-size:.88rem}
+
+/* valores/preços com peso maior (mais "grossos") */
+.card-price,.prod-price,.cart-total strong,.checkout-total strong,
+.cart-item .ci-price,.checkout-summary .ck-line span:last-child{
+  font-weight:800;
+}
+
+/* ---- FONTE DOS NÚMEROS/VALORES — geométrica e redonda (estilo Gotham Black) ---- */
+:root{--num-font:"Montserrat",system-ui,sans-serif}
+.card-price,.prod-price,.cart-total strong,.checkout-total strong,
+.cart-item .ci-price,.checkout-summary .ck-line span:last-child,
+.checkout-summary .checkout-total strong,.ci-qty span,.cart-count,
+.loja-sub #prodCount{
+  font-family:var(--num-font);
+  letter-spacing:.2px;
+}
+/* preços e totais em destaque ficam no peso black */
+.card-price,.prod-price,.cart-total strong,.checkout-total strong,
+.loja-sub #prodCount{font-weight:900}
+
+/* ======================================================================
+   POP-UP DE BOAS-VINDAS
+   ====================================================================== */
+.welcome-overlay{z-index:95}
+.welcome-modal{
+  position:fixed;z-index:96;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:min(440px,92vw);max-height:92vh;overflow-y:auto;text-align:center;
+  background:linear-gradient(180deg,var(--bg-800),var(--bg-900));
+  border:1px solid rgba(70,214,44,.35);border-radius:22px;
+  box-shadow:var(--shadow),0 0 40px rgba(70,214,44,.18);
+  padding:2rem 1.6rem 1.8rem;animation:popin .3s ease both;
+}
+.welcome-close{position:absolute;top:.7rem;right:.8rem;background:rgba(13,16,12,.6);border:1px solid rgba(70,214,44,.3);color:var(--text);width:34px;height:34px;border-radius:50%;font-size:1rem;cursor:pointer;transition:.2s;display:grid;place-items:center}
+.welcome-close:hover{color:var(--green);transform:rotate(90deg)}
+.welcome-cham{width:120px;margin:0 auto .5rem;filter:drop-shadow(0 12px 26px rgba(70,214,44,.4));animation:float 5.5s ease-in-out infinite}
+.welcome-eyebrow{display:inline-block;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:.72rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--green-bright);margin-bottom:.4rem}
+.welcome-title{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:1.7rem;color:var(--text);line-height:1.12}
+.welcome-title span{color:var(--green-bright);text-shadow:0 0 16px rgba(70,214,44,.35)}
+.welcome-text{color:var(--muted);font-size:.95rem;margin:.7rem 0 1.3rem;line-height:1.55}
+.welcome-actions{display:flex;flex-direction:column;gap:.6rem}
+.welcome-actions .btn{width:100%}
+
+/* ======================================================================
+   MODO CLARO (data-theme="light") — mantém os acentos verde/roxo
+   ====================================================================== */
+[data-theme="light"]{
+  --text:#172210;
+  --muted:#5f6d56;
+  --green-bright:#1f8a13;
+  --purple-soft:#6a16b8;
+  --bg-900:#e7ede1;
+  --bg-800:#f5f8f1;
+  --bg-700:#e0e7d8;
+  --panel:rgba(31,138,19,.06);
+  --shadow:0 18px 50px rgba(25,45,18,.16);
+  background:#eef2ea;
+}
+[data-theme="light"] body{
+  color:var(--text);
+  background:
+    radial-gradient(1100px 650px at 82% -8%, rgba(155,48,255,.12) 0%, transparent 60%),
+    radial-gradient(900px 600px at 0% 95%, rgba(70,214,44,.14) 0%, transparent 55%),
+    linear-gradient(180deg,#f3f7ef 0%,#eaf0e4 60%,#eef3e9 100%);
+}
+[data-theme="light"] .smoke{opacity:.1}
+[data-theme="light"] .stars{
+  background-image:radial-gradient(circle, rgba(31,138,19,.18) 1.2px, transparent 1.7px);
+  opacity:.75;
+}
+
+/* header */
+[data-theme="light"] .site-header{
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.72));
+  border-bottom:1px solid rgba(31,138,19,.2);
+}
+[data-theme="light"] .nav-tab{border-color:rgba(106,22,184,.3)}
+[data-theme="light"] .cart-btn{border-color:rgba(31,138,19,.45);color:var(--green-deep)}
+[data-theme="light"] .cart-btn:hover{background:rgba(31,138,19,.1)}
+
+/* cards */
+[data-theme="light"] .card{background:linear-gradient(180deg,rgba(31,138,19,.07),#ffffff);border-color:rgba(31,138,19,.2)}
+[data-theme="light"] .card-cat{background:rgba(255,255,255,.92);color:var(--green-deep);border-color:rgba(31,138,19,.3)}
+[data-theme="light"] .card-price,[data-theme="light"] .prod-price{color:var(--paint-yellow);text-shadow:1px 1px 0 var(--ink),-1px 1px 0 var(--ink),1px -1px 0 var(--ink),-1px -1px 0 var(--ink),0 3px 6px rgba(11,13,9,.4)}
+
+/* pílulas / busca / abas / badges */
+[data-theme="light"] .tab{background:#fff;border-color:rgba(31,138,19,.28);color:var(--text)}
+[data-theme="light"] .search-box{background:#fff;border-color:rgba(31,138,19,.28)}
+[data-theme="light"] .hero-badges li{background:#fff;border-color:rgba(31,138,19,.3);box-shadow:2px 2px 0 rgba(31,138,19,.12);color:var(--text)}
+
+/* sobre a loja */
+[data-theme="light"] .sobre-inner{background:linear-gradient(135deg,rgba(31,138,19,.08),#ffffff);border-color:rgba(31,138,19,.2)}
+
+/* carrinho / itens / inputs */
+[data-theme="light"] .cart-item{background:linear-gradient(180deg,rgba(31,138,19,.07),#fff);border-color:rgba(31,138,19,.18)}
+[data-theme="light"] .ci-icon{border-color:rgba(31,138,19,.25);box-shadow:2px 2px 0 rgba(31,138,19,.12)}
+[data-theme="light"] .ci-qty{background:#eef3e8;border-color:rgba(31,138,19,.28)}
+[data-theme="light"] .cart-note{background:#fff}
+[data-theme="light"] .field input,[data-theme="light"] .field textarea,[data-theme="light"] .field select{background:#fff;border-color:rgba(31,138,19,.28)}
+[data-theme="light"] .field select option{background:#fff;color:var(--text)}
+[data-theme="light"] .opt{background:#fff;border-color:rgba(31,138,19,.25)}
+[data-theme="light"] .checkout-summary{background:linear-gradient(180deg,rgba(106,22,184,.08),#fff);border-color:rgba(106,22,184,.25)}
+
+/* pop-ups (botões de fechar claros) */
+[data-theme="light"] .prod-close,[data-theme="light"] .welcome-close{background:rgba(255,255,255,.85);color:var(--text);border-color:rgba(31,138,19,.3)}
+
+/* barra de categorias (abas fixas) clara */
+[data-theme="light"] .tabs{
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.7));
+  border-bottom:1px solid rgba(31,138,19,.18);
+}
+
+/* troca de imagem do mascote conforme o tema (ex.: "A Loja") */
+.theme-light-only{display:none}
+[data-theme="light"] .theme-dark-only{display:none}
+[data-theme="light"] .theme-light-only{display:block}
+
+/* ======================================================================
+   POLIMENTO GERAL — benefícios, passos, cards e carrinho
+   ====================================================================== */
+
+/* ---- FAIXA DE BENEFÍCIOS (abaixo do hero) ---- */
+.benefits{
+  max-width:var(--maxw);margin:.4rem auto 0;padding:0 1.2rem;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;
+}
+.benefit{
+  display:flex;align-items:center;gap:.8rem;
+  background:linear-gradient(180deg,rgba(31,138,19,.12),rgba(20,24,17,.5));
+  border:1px solid rgba(70,214,44,.18);border-radius:14px;padding:.9rem 1rem;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.benefit:hover{border-color:rgba(70,214,44,.45);transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.bn-ic{font-size:1.55rem;line-height:1;filter:drop-shadow(0 0 8px rgba(70,214,44,.4))}
+.bn-tx{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+.bn-tx strong{font-size:.88rem;color:var(--text);font-weight:700;letter-spacing:-.1px}
+.bn-tx span{font-size:.76rem;color:var(--muted)}
+
+/* ---- COMO PEDIR (3 passos) ---- */
+.steps{max-width:var(--maxw);margin:3.2rem auto 0;padding:0 1.2rem}
+.steps-head{text-align:center;margin-bottom:1.7rem}
+.steps-head .section-title{display:inline-block}
+.steps-head .section-title::after{margin-left:auto;margin-right:auto}
+.steps-head .loja-sub{margin-top:.7rem}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem}
+.step{
+  position:relative;
+  background:linear-gradient(180deg,rgba(31,138,19,.10),rgba(20,24,17,.55));
+  border:1px solid rgba(70,214,44,.18);border-radius:16px;padding:1.6rem 1.35rem;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.step:hover{border-color:rgba(70,214,44,.42);transform:translateY(-3px);box-shadow:var(--shadow)}
+.step-n{
+  display:grid;place-items:center;width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,var(--green),var(--green-deep));color:#08210b;
+  font-family:var(--num-font);font-weight:900;font-size:1.25rem;margin-bottom:.95rem;
+  box-shadow:0 6px 16px rgba(70,214,44,.32);
+}
+.step h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:1.06rem;color:var(--text);margin-bottom:.4rem;letter-spacing:-.2px}
+.step p{color:var(--muted);font-size:.9rem;line-height:1.5}
+.step strong{color:var(--green-bright);font-weight:700}
+
+/* ---- CARDS DE PRODUTO (acabamento) ---- */
+/* content-visibility: o navegador pula a renderização dos cards fora da tela
+   (grande ganho de performance com muitos produtos). */
+.card{border-radius:18px;content-visibility:auto;contain-intrinsic-size:auto 340px}
+.card:hover{box-shadow:0 18px 42px rgba(0,0,0,.45),0 0 0 1px rgba(70,214,44,.35)}
+.card-add{box-shadow:0 6px 16px rgba(70,214,44,.28)}
+.card-add:hover{box-shadow:0 10px 22px rgba(70,214,44,.45)}
+
+/* ---- CARRINHO / CHECKOUT (acabamento) ---- */
+.cart-header h3{position:relative}
+.cart-total strong{text-shadow:0 0 18px rgba(70,214,44,.35)}
+.checkout-body .btn-whats,.cart-footer .btn-whats{box-shadow:0 10px 26px rgba(37,211,102,.32)}
+.checkout-body .btn-whats:hover:not(:disabled),.cart-footer .btn-whats:hover:not(:disabled){box-shadow:0 14px 32px rgba(37,211,102,.5)}
+
+/* ---- TEMA CLARO: benefícios + passos ---- */
+[data-theme="light"] .benefit,[data-theme="light"] .step{
+  background:linear-gradient(180deg,rgba(31,138,19,.07),#ffffff);
+  border-color:rgba(31,138,19,.2);
+}
+[data-theme="light"] .benefit:hover,[data-theme="light"] .step:hover{
+  border-color:rgba(31,138,19,.45);box-shadow:0 12px 30px rgba(25,45,18,.12);
+}
+
+/* ---- RESPONSIVO: benefícios + passos ---- */
+@media (max-width:820px){
+  .benefits{grid-template-columns:1fr 1fr}
+  .steps-grid{grid-template-columns:1fr}
+}
+@media (max-width:460px){
+  .benefits{grid-template-columns:1fr}
+}
+
+/* ======================================================================
+   REPAGINADA MÉDIA — categorias em destaque + rodapé reformulado
+   ====================================================================== */
+
+/* ---- cabeçalho de bloco (título + link) ---- */
+.block-head{
+  max-width:var(--maxw);margin:0 auto;padding:0 1.2rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.block-link{
+  background:transparent;border:none;cursor:pointer;
+  color:var(--green-bright);font-family:"Bricolage Grotesque",system-ui,sans-serif;
+  font-weight:800;font-size:.8rem;letter-spacing:.5px;text-transform:uppercase;
+  padding:.4rem .2rem;transition:color .2s,transform .2s;
+}
+.block-link:hover{color:var(--purple-soft);transform:translateX(2px)}
+
+/* ---- COMPRE POR CATEGORIA ---- */
+.cats{max-width:var(--maxw);margin:3.2rem auto 0;padding:0}
+.cat-tiles{
+  max-width:var(--maxw);margin:1.2rem auto 0;padding:0 1.2rem;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.8rem;
+}
+.cat-tile{
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;text-align:center;
+  background:linear-gradient(180deg,rgba(31,138,19,.10),rgba(20,24,17,.55));
+  border:1px solid rgba(70,214,44,.18);border-radius:14px;padding:1.15rem .7rem;
+  cursor:pointer;color:var(--text);font-family:inherit;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.cat-tile:hover{border-color:var(--green);transform:translateY(-3px);box-shadow:var(--shadow)}
+.cat-ic{font-size:1.7rem;line-height:1;filter:drop-shadow(0 0 7px rgba(70,214,44,.35))}
+.cat-nm{font-weight:700;font-size:.86rem;letter-spacing:-.1px}
+.cat-ct{font-size:.72rem;color:var(--muted)}
+
+/* ---- RODAPÉ REFORMULADO ---- */
+.footer-cols{
+  max-width:var(--maxw);margin:0 auto 2.2rem;text-align:left;
+  display:grid;grid-template-columns:1.6fr 1fr 1fr 1.2fr;gap:1.6rem;
+}
+.footer-brand{display:flex;align-items:center;gap:.6rem}
+.footer-logo{height:44px;width:auto;filter:drop-shadow(0 0 8px rgba(70,214,44,.4))}
+.footer-brand-tx{display:flex;flex-direction:column;line-height:1}
+.footer-brand-tx strong{font-family:"Rubik Wet Paint",cursive;color:var(--purple);font-size:1.15rem;font-weight:400;text-shadow:0 0 14px rgba(155,48,255,.4)}
+.footer-brand-tx span{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:.56rem;letter-spacing:3px;color:var(--green-bright);margin-top:2px}
+.footer-tagline{color:var(--muted);font-size:.85rem;line-height:1.55;margin-top:.9rem}
+.footer-col h4{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:.8rem;letter-spacing:.5px;color:var(--text);margin-bottom:.9rem;text-transform:uppercase}
+.footer-links{display:flex;flex-direction:column;gap:.5rem}
+.footer-links a{color:var(--muted);font-size:.88rem;cursor:pointer;transition:color .2s,transform .2s}
+.footer-links a:hover{color:var(--green-bright);transform:translateX(2px)}
+.pay-badges{display:flex;flex-wrap:wrap;gap:.4rem}
+.pay-badges span{font-size:.72rem;font-weight:700;color:var(--text);background:rgba(255,255,255,.05);border:1px solid rgba(70,214,44,.25);border-radius:6px;padding:.28rem .55rem}
+.footer-secure{color:var(--muted);font-size:.78rem;margin-top:.85rem}
+
+/* ---- TEMA CLARO ---- */
+[data-theme="light"] .cat-tile{background:linear-gradient(180deg,rgba(31,138,19,.07),#ffffff);border-color:rgba(31,138,19,.2)}
+[data-theme="light"] .cat-tile:hover{border-color:var(--green-deep);box-shadow:0 12px 30px rgba(25,45,18,.12)}
+[data-theme="light"] .pay-badges span{background:#fff;border-color:rgba(31,138,19,.25)}
+
+/* ---- VITRINES (destaques / promoções na página inicial) ---- */
+.showcase{max-width:var(--maxw);margin:3.2rem auto 0}
+.showcase[hidden]{display:none}
+.showcase .grid{padding:0 1.2rem;margin-top:1.2rem}
+
+/* preços com promoção */
+.card-prices{display:flex;flex-direction:column;line-height:1.1;gap:.1rem}
+.card-price-de{font-size:.8rem;color:var(--muted);text-decoration:line-through;font-weight:600}
+.card-badge-off{
+  position:absolute;top:.6rem;right:.6rem;z-index:3;
+  background:linear-gradient(135deg,#ff2e88,#c81e63);color:#fff;
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;
+  font-size:.66rem;letter-spacing:.5px;padding:.26rem .5rem;border-radius:6px;
+  box-shadow:0 4px 12px rgba(255,46,136,.4);
+}
+
+/* ---- MENU DE CATEGORIAS (ícone 3 pontos no topo) ---- */
+.cat-menu-wrap{position:relative;display:flex}
+.cat-menu-btn{
+  position:relative;background:transparent;border:1px solid rgba(70,214,44,.4);
+  color:var(--green-bright);height:46px;padding:0 1rem;border-radius:12px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5rem;transition:.2s;
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;
+  font-size:.74rem;letter-spacing:.6px;text-transform:uppercase;
+}
+.cat-menu-btn:hover{background:rgba(70,214,44,.12);transform:translateY(-2px)}
+.cat-menu-btn svg{flex:0 0 auto}
+.cmb-label{line-height:1}
+/* em telas pequenas vira só o ícone de traços (menu) */
+@media (max-width:600px){
+  .cat-menu-btn{padding:0;width:46px;justify-content:center}
+  .cmb-label{display:none}
+}
+.cat-menu{
+  position:absolute;top:calc(100% + 10px);right:0;z-index:60;
+  width:min(290px,86vw);max-height:min(70vh,460px);overflow-y:auto;
+  background:linear-gradient(180deg,var(--bg-800),var(--bg-900));
+  border:1px solid rgba(70,214,44,.3);border-radius:14px;
+  box-shadow:var(--shadow);padding:.45rem;animation:menuin .2s ease both;
+}
+.cat-menu[hidden]{display:none}
+@keyframes menuin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.cat-menu-head{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;
+  font-size:.66rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);
+  padding:.5rem .7rem .35rem;
+}
+.cat-menu-item{
+  display:flex;align-items:center;gap:.6rem;width:100%;
+  background:transparent;border:none;cursor:pointer;color:var(--text);
+  font-family:inherit;font-size:.9rem;text-align:left;
+  padding:.58rem .7rem;border-radius:10px;transition:background .15s,color .15s;
+}
+.cat-menu-item:hover{background:rgba(70,214,44,.12);color:var(--green-bright)}
+.cat-menu-item.is-active{background:rgba(70,214,44,.16);color:var(--green-bright)}
+.cmi-ic{display:inline-flex;align-items:center;justify-content:center;width:1.5rem;color:var(--green-bright)}
+.cmi-ic svg{width:18px;height:18px;display:block}
+.cmi-nm{flex:1;font-weight:600}
+.cmi-ct{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.cat-menu-item.is-active .cmi-ct{color:var(--green-bright)}
+
+[data-theme="light"] .cat-menu-btn{border-color:rgba(31,138,19,.45);color:var(--green-deep)}
+[data-theme="light"] .cat-menu-btn:hover{background:rgba(31,138,19,.1)}
+[data-theme="light"] .cat-menu-item:hover,[data-theme="light"] .cat-menu-item.is-active{background:rgba(31,138,19,.1)}
+
+/* ---- RESPONSIVO ---- */
+@media (max-width:820px){
+  .footer-cols{grid-template-columns:1fr 1fr;gap:1.4rem}
+}
+@media (max-width:480px){
+  .footer-cols{grid-template-columns:1fr;text-align:center}
+  .footer-brand{justify-content:center}
+  .footer-links{align-items:center}
+  .pay-badges{justify-content:center}
+  .block-head{justify-content:center;text-align:center}
+  /* header compacto: linhas mais baixas (marca+ícones em cima / abas embaixo) */
+  .header-inner{gap:.4rem;padding:.4rem .7rem;row-gap:.3rem}
+  .brand-logo{height:34px}
+  .brand-name{font-size:1.12rem}
+  .brand-sub{font-size:.5rem;letter-spacing:2px;margin-top:1px}
+  .cat-menu-btn,.theme-toggle,.cart-btn{width:40px;height:40px;padding:0}
+  .cat-menu-btn{justify-content:center}
+  .nav-tab{padding:.32rem .85rem;font-size:.7rem}
+  .main-nav{gap:.35rem}
+}
