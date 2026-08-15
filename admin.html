@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Painel Admin · Lygllyz</title>
+<style>
+  :root{
+    --verde:#46d62c; --verde-dark:#2b8f18; --roxo:#9b30ff;
+    --bg:#0c0f0a; --bg2:#131810; --bg3:#1a2015;
+    --tx:#eaf5e6; --tx2:#9db893; --borda:#28301f; --erro:#ff5c5c; --ok:#46d62c;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+  button{font-family:inherit;cursor:pointer}
+  input,select,textarea{font-family:inherit;font-size:14px}
+  .hide{display:none!important}
+
+  /* ===== LOGIN ===== */
+  .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{background:var(--bg2);border:1px solid var(--borda);border-radius:16px;padding:36px;width:100%;max-width:360px;text-align:center}
+  .login-card img{width:72px;margin-bottom:12px}
+  .login-card h1{font-size:22px;margin-bottom:4px;letter-spacing:1px}
+  .login-card p{color:var(--tx2);font-size:13px;margin-bottom:20px}
+  .login-card input{width:100%;padding:12px;border-radius:10px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx);margin-bottom:12px}
+  .login-card button{width:100%;padding:12px;border-radius:10px;border:none;background:var(--verde);color:#0c0f0a;font-weight:700;font-size:15px}
+  .login-err{color:var(--erro);font-size:13px;margin-top:8px;min-height:18px}
+
+  /* ===== TOPO ===== */
+  .topbar{background:var(--bg2);border-bottom:1px solid var(--borda);padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:1px}
+  .topbar .brand img{width:34px}
+  .topbar .spacer{flex:1}
+  .badge{background:var(--bg3);border:1px solid var(--borda);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--tx2)}
+  .badge.ok{color:var(--ok);border-color:var(--ok)}
+  .badge.err{color:var(--erro);border-color:var(--erro)}
+  .topbar button{padding:8px 14px;border-radius:10px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx);font-size:13px}
+  .topbar button.primary{background:var(--verde);color:#0c0f0a;font-weight:700;border:none}
+
+  /* ===== CONTEUDO ===== */
+  .wrap{padding:20px;max-width:1200px;margin:0 auto}
+  .settings{background:var(--bg2);border:1px solid var(--borda);border-radius:14px;padding:18px;margin-bottom:20px}
+  .settings h3{margin-bottom:10px;font-size:15px}
+  .settings .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+  .settings label{display:block;font-size:12px;color:var(--tx2);margin-bottom:4px}
+  .settings input{width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx)}
+  .settings .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .settings .actions button{padding:10px 16px;border-radius:10px;border:none;font-size:14px;font-weight:600}
+  .btn-load{background:var(--bg3);border:1px solid var(--borda)!important;color:var(--tx)}
+  .btn-save{background:var(--verde);color:#0c0f0a}
+
+  .bar{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .bar input[type=search]{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx)}
+  .bar select{padding:10px;border-radius:10px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx)}
+  .btn-add{background:var(--roxo);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-weight:700}
+
+  table{width:100%;border-collapse:collapse;background:var(--bg2);border:1px solid var(--borda);border-radius:12px;overflow:hidden}
+  th,td{padding:10px 12px;text-align:left;font-size:13px;border-bottom:1px solid var(--borda)}
+  th{background:var(--bg3);color:var(--tx2);font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+  tr:hover{background:var(--bg3)}
+  td .th{width:48px;height:48px;object-fit:cover;border-radius:8px;background:var(--bg3)}
+  td .nome{font-weight:600}
+  td .cat{font-size:11px;color:var(--tx2)}
+  td .preco{color:var(--verde);font-weight:700;white-space:nowrap}
+  td .preco-de{color:var(--tx2);text-decoration:line-through;font-size:12px}
+  .tag{display:inline-block;background:var(--bg3);border:1px solid var(--borda);border-radius:6px;padding:2px 8px;font-size:11px;color:var(--tx2)}
+  .row-actions{display:flex;gap:6px}
+  .row-actions button{padding:6px 10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx);font-size:12px}
+  .row-actions button.del{color:var(--erro);border-color:var(--erro)}
+  .empty{text-align:center;color:var(--tx2);padding:30px;font-size:14px}
+
+  /* ===== MODAL ===== */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+  .modal-card{background:var(--bg2);border:1px solid var(--borda);border-radius:16px;width:100%;max-width:640px;max-height:90vh;overflow:auto}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--borda)}
+  .modal-head h2{font-size:18px}
+  .modal-head button{background:none;border:none;color:var(--tx2);font-size:22px}
+  .modal-body{padding:20px;display:grid;gap:14px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .field label{display:block;font-size:12px;color:var(--tx2);margin-bottom:4px}
+  .field input,.field select,.field textarea{width:100%;padding:10px;border-radius:8px;border:1px solid var(--borda);background:var(--bg3);color:var(--tx)}
+  .field textarea{resize:vertical}
+  .field .hint{font-size:11px;color:var(--tx2);margin-top:3px}
+  .check{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2)}
+  .check input{width:auto}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 20px;border-top:1px solid var(--borda)}
+  .modal-foot button{padding:10px 18px;border-radius:10px;border:none;font-weight:600;font-size:14px}
+  .btn-cancel{background:var(--bg3);border:1px solid var(--borda)!important;color:var(--tx)}
+  .btn-confirm{background:var(--verde);color:#0c0f0a}
+
+  .toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--borda);border-left:4px solid var(--verde);border-radius:10px;padding:14px 18px;font-size:14px;z-index:99;box-shadow:0 8px 30px rgba(0,0,0,.5);transform:translateY(20px);opacity:0;transition:.25s}
+  .toast.show{transform:translateY(0);opacity:1}
+  .toast.err{border-left-color:var(--erro)}
+  .spinner{border:3px solid var(--bg3);border-top-color:var(--verde);border-radius:50%;width:18px;height:18px;display:inline-block;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(max-width:640px){.grid-2,.grid-3{grid-template-columns:1fr}table{font-size:12px}th{display:none}td{display:block;border:none;padding:6px 12px}td::before{content:attr(data-l);font-size:10px;color:var(--tx2);display:block}tr{border-bottom:1px solid var(--borda)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginView" class="login-wrap">
+  <div class="login-card">
+    <img src="camaleao-sem-fundo.png" alt="Lygllyz" />
+    <h1>PAINEL ADMIN</h1>
+    <p>Lygllyz Tabacaria · Gerenciar produtos</p>
+    <input id="loginPass" type="password" placeholder="Senha de acesso" />
+    <button onclick="doLogin()">Entrar</button>
+    <div id="loginErr" class="login-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appView" class="hide">
+  <div class="topbar">
+    <div class="brand"><img src="camaleao-sem-fundo.png" alt="" /> LYGLLYZ ADMIN</div>
+    <span id="connBadge" class="badge">Sem conexão</span>
+    <div class="spacer"></div>
+    <button onclick="openSettings()">⚙️ Configurações</button>
+    <button onclick="doLogout()">Sair</button>
+  </div>
+
+  <div class="wrap">
+    <!-- CONFIGURAÇÃO DO GITHUB -->
+    <div id="settingsBox" class="settings hide">
+      <h3>🔗 Conexão GitHub (para salvar e deploy automático)</h3>
+      <div class="row">
+        <div><label>Token GitHub (classic)</label><input id="sToken" type="password" placeholder="ghp_..." /></div>
+        <div><label>Dono do repo</label><input id="sOwner" placeholder="gbdd2d-creator" /></div>
+        <div><label>Repo</label><input id="sRepo" placeholder="lygllyz-site" /></div>
+        <div><label>Caminho do config.js</label><input id="sPath" placeholder="site lygllyz/js/config.js" /></div>
+      </div>
+      <div class="actions">
+        <button class="btn-load" onclick="saveSettings()">Salvar configuração</button>
+        <button class="btn-load" onclick="loadFromGithub()">🔽 Carregar produtos do GitHub</button>
+        <button class="btn-save" onclick="saveToGithub()">🔼 Salvar e publicar</button>
+      </div>
+      <p style="font-size:12px;color:var(--tx2);margin-top:8px">
+        O token fica salvo só neste navegador (localStorage). Crie um em
+        github.com/settings/tokens → <b>Generate new token (classic)</b> → marque <b>repo</b>.
+      </p>
+    </div>
+
+    <!-- BARRA -->
+    <div class="bar">
+      <input id="search" type="search" placeholder="🔍 Buscar produto…" oninput="renderTable()" />
+      <select id="filterCat" onchange="renderTable()">
+        <option value="">Todas categorias</option>
+      </select>
+      <button class="btn-add" onclick="openModal()">+ Novo produto</button>
+    </div>
+
+    <!-- TABELA -->
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Foto</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>De</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="emptyRow" class="empty hide">Nenhum produto encontrado.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PRODUTO -->
+<div id="modal" class="modal hide">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="modalTitle">Novo produto</h2>
+      <button onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="grid-2">
+        <div class="field">
+          <label>Nome *</label>
+          <input id="pNome" placeholder="Ex.: Seda O2 Slim" />
+        </div>
+        <div class="field">
+          <label>Categoria *</label>
+          <select id="pCat"></select>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="field">
+          <label>Preço (R$) *</label>
+          <input id="pPreco" type="number" step="0.01" min="0" placeholder="8" />
+        </div>
+        <div class="field">
+          <label>Preço de (promoção)</label>
+          <input id="pPrecoDe" type="number" step="0.01" min="0" placeholder="10 (vazio = sem promo)" />
+        </div>
+        <div class="field">
+          <label>ID (url)</label>
+          <input id="pId" placeholder="seda-o2slim" />
+          <div class="hint">Deixe vazio para gerar automático</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Descrição</label>
+        <textarea id="pDesc" rows="2" placeholder="Descrição curta do produto"></textarea>
+      </div>
+      <div class="field">
+        <label>Foto principal (arquivo em img/)</label>
+        <input id="pImg" placeholder="img/seda-o2slim.jpg" />
+        <div class="hint">Deixe vazio para placeholder automático.</div>
+      </div>
+      <div class="field">
+        <label>Fotos extras (galeria) — separadas por vírgula</label>
+        <input id="pImgs" placeholder="img/x.jpg, img/x-2.jpg" />
+        <div class="hint">Vazio = só a foto principal.</div>
+      </div>
+      <div class="check">
+        <input id="pNovidade" type="checkbox" />
+        <label for="pNovidade">Marcar como Novidade (badge)</label>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-confirm" onclick="saveProduct()">Salvar produto</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hide"></div>
+
+<script>
+/* ================= CONFIG DO ADMIN ================= */
+const ADMIN_PASS = "lygllyz123"; // troque pela senha que quiser
+const CAT_ICONS = ["🛠️","👝","🪵","💨","🧳","🪨","🏺","🌀","🔥","🎁","🧨","⚙️","🥢","🔮","🍃","🧴","🌿","✂️"];
+const DEF_CATS = [
+  {key:"acessorio",nome:"Acessórios"},{key:"bag",nome:"Bags"},{key:"bandeja",nome:"Bandejas"},
+  {key:"bong",nome:"Bongs / Filtros"},{key:"case",nome:"Case"},{key:"cinzeiro",nome:"Cinzeiros"},
+  {key:"cuia",nome:"Cuia"},{key:"dechavador",nome:"Dechavadores"},{key:"isqueiro",nome:"Isqueiros"},
+  {key:"kit",nome:"Kit Completo"},{key:"macarico",nome:"Maçaricos"},{key:"moco",nome:"Mocos"},
+  {key:"piteira",nome:"Piteira"},{key:"vidro",nome:"Piteira de Vidro"},{key:"seda",nome:"Seda"},
+  {key:"slick",nome:"Slick"},{key:"tabaco",nome:"Tabacos"},{key:"tesoura",nome:"Tesoura"}
+];
+
+/* ================= ESTADO ================= */
+let CONFIG = null;        // dados atuais (categorias, produtos, destaques, promocoes, contato...)
+let CATS = DEF_CATS;
+let editingId = null;     // id sendo editado no modal
+
+const $ = (id) => document.getElementById(id);
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const esc = (s) => String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const fmt = (n) => "R$ " + Number(n||0).toFixed(2).replace(".", ",");
+
+/* ================= LOGIN ================= */
+function doLogin(){
+  const v = $("loginPass").value;
+  if (v === ADMIN_PASS) {
+    sessionStorage.setItem("lyg_admin_auth", "1");
+    $("loginView").classList.add("hide");
+    $("appView").classList.remove("hide");
+    init();
+  } else {
+    $("loginErr").textContent = "Senha incorreta.";
+  }
+}
+function doLogout(){ sessionStorage.removeItem("lyg_admin_auth"); location.reload(); }
+
+/* ================= INICIALIZAÇÃO ================= */
+function init(){
+  if (sessionStorage.getItem("lyg_admin_auth") !== "1") return;
+  $("loginView").classList.add("hide");
+  $("appView").classList.remove("hide");
+
+  // restaura settings
+  const st = lsGet("lyg_settings", {});
+  $("sToken").value = st.token || "";
+  $("sOwner").value = st.owner || "";
+  $("sRepo").value = st.repo || "";
+  $("sPath").value = st.path || "";
+
+  updateBadge();
+
+  // tenta carregar automaticamente do GitHub se já tiver config
+  if (st.token && st.owner && st.repo) {
+    loadFromGithub();
+  } else {
+    loadFromGithub();
+  }
+}
+
+function updateBadge(){
+  const st = lsGet("lyg_settings", {});
+  const b = $("connBadge");
+  if (!st.token || !st.owner || !st.repo) { b.textContent = "Sem conexão"; b.className = "badge err"; }
+  else { b.textContent = "🔗 " + st.owner + "/" + st.repo; b.className = "badge ok"; }
+}
+
+function saveSettings(){
+  const st = {
+    token: $("sToken").value.trim(),
+    owner: $("sOwner").value.trim(),
+    repo: $("sRepo").value.trim(),
+    path: $("sPath").value.trim()
+  };
+  if (!st.owner) st.owner = "gbdd2d-creator";
+  if (!st.repo) st.repo = "lygllyz-site";
+  if (!st.path) st.path = "site lygllyz/js/config.js";
+  lsSet("lyg_settings", st);
+  updateBadge();
+  toast("Configuração salva!");
+}
+
+/* ================= GITHUB ================= */
+const GH = "https://api.github.com";
+
+async function ghFetch(url, opts){
+  const st = lsGet("lyg_settings", {});
+  const headers = { Accept: "application/vnd.github+json" };
+  if (st.token) headers.Authorization = "Bearer " + st.token;
+  const res = await fetch(GH + url, { ...opts, headers });
+  if (res.status === 404) throw new Error("Arquivo não encontrado. Confira o caminho.");
+  if (res.status === 401) throw new Error("Token inválido ou sem permissão 'repo'.");
+  if (!res.ok) throw new Error("Erro GitHub (" + res.status + "): " + (await res.text()).slice(0,200));
+  return res.status === 204 ? null : res.json();
+}
+
+async function loadFromGithub(){
+  const st = lsGet("lyg_settings", {});
+  if (!st.token) { toast("Configure o token GitHub primeiro (⚙️ Configurações).", true); return; }
+  if (!st.owner || !st.repo || !st.path) { toast("Configure owner/repo/caminho.", true); return; }
+  try {
+    $("connBadge").innerHTML = '<span class="spinner"></span> Carregando…';
+    const data = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(st.path));
+    const src = decodeURIComponent(escape(atob(data.content)));
+    parseConfig(src);
+    renderTable();
+    toast("Produtos carregados do GitHub! (" + CONFIG.produtos.length + " itens)");
+  } catch (e) {
+    toast("Falha ao carregar: " + e.message, true);
+  } finally {
+    updateBadge();
+  }
+}
+
+async function saveToGithub(){
+  const st = lsGet("lyg_settings", {});
+  if (!st.token) { toast("Configure o token GitHub primeiro.", true); return; }
+  if (!CONFIG) { toast("Nada para salvar — carregue os produtos antes.", true); return; }
+  try {
+    $("connBadge").innerHTML = '<span class="spinner"></span> Salvando…';
+    const js = buildConfigJs();
+    const encoded = btoa(unescape(encodeURIComponent(js)));
+
+    // pega sha atual do arquivo (necessário para update)
+    let sha = null;
+    try {
+      const cur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(st.path));
+      sha = cur.sha;
+    } catch (e) { /* arquivo não existe ainda */ }
+
+    const msg = "Atualização de produtos via painel admin (" + new Date().toLocaleString("pt-BR") + ")";
+    await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(st.path), {
+      method: "PUT",
+      body: JSON.stringify({
+        message: msg,
+        content: encoded,
+        ...(sha ? { sha } : {})
+      })
+    });
+    toast("Salvo no GitHub! O Vercel vai publicar automaticamente em ~1 minuto. 🚀");
+  } catch (e) {
+    toast("Falha ao salvar: " + e.message, true);
+  } finally {
+    updateBadge();
+  }
+}
+
+/* ================= PARSE / BUILD CONFIG.JS ================= */
+function parseConfig(src){
+  // executa o JS do config.js num escopo isolado e captura o CONFIG
+  const c = {};
+  const f = new Function("CONFIG", src + "\n;window.__CFG = CONFIG;");
+  f(c);
+  CONFIG = window.__CFG || c;
+  if (!CONFIG.categorias) CONFIG.categorias = [];
+  if (!CONFIG.produtos) CONFIG.produtos = [];
+  if (!CONFIG.destaques) CONFIG.destaques = [];
+  if (!CONFIG.promocoes) CONFIG.promocoes = {};
+  if (CONFIG.categorias.length) CATS = CONFIG.categorias;
+  fillCatSelect();
+}
+
+function buildConfigJs(){
+  if (!CONFIG) return "";
+  // garante estrutura
+  const c = {
+    whatsapp: CONFIG.whatsapp || "5527988712842",
+    email: CONFIG.email || "lygllyzsmokeculture@gmail.com",
+    telefone: CONFIG.telefone || "(27) 98871-2842",
+    instagram: CONFIG.instagram || "@lygllyz_tabacaria",
+    endereco: CONFIG.endereco || "",
+    horario: CONFIG.horario || "Seg a Sáb · 10h às 20h",
+    taxaEntrega: CONFIG.taxaEntrega ?? 10,
+    fretesFora: CONFIG.fretesFora || [],
+    mensagemRodape: CONFIG.mensagemRodape || "",
+    destaques: CONFIG.destaques || [],
+    promocoes: CONFIG.promocoes || {},
+    categorias: CATS,
+    produtos: CONFIG.produtos || []
+  };
+  const js = JSON.stringify(c, null, 2);
+  return `/* =====================================================================\n   LYGLLYZ SMOKE CULTURE — CONFIGURAÇÃO\n   Gerado pelo Painel Admin. Edite pelo site admin, não na mão.\n   ===================================================================== */\n\nconst CONFIG = ${js};\n`;
+}
+
+/* ================= RENDER ================= */
+function fillCatSelect(){
+  const sel = $("pCat");
+  sel.innerHTML = CATS.map((c) => `<option value="${esc(c.key)}">${esc(c.nome)}</option>`).join("");
+}
+function fillFilterCat(){
+  const sel = $("filterCat");
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">Todas categorias</option>` +
+    CATS.map((c) => `<option value="${esc(c.key)}">${esc(c.nome)}</option>`).join("");
+  sel.value = cur;
+}
+
+function renderTable(){
+  if (!CONFIG) return;
+  fillFilterCat();
+  const term = $("search").value.trim().toLowerCase();
+  const cat = $("filterCat").value;
+  const catMap = Object.fromEntries(CATS.map((c) => [c.key, c.nome]));
+
+  const list = CONFIG.produtos.filter((p) => {
+    const okCat = !cat || p.cat === cat;
+    const okTerm = !term || (p.nome||"").toLowerCase().includes(term) || (p.desc||"").toLowerCase().includes(term);
+    return okCat && okTerm;
+  });
+
+  $("emptyRow").classList.toggle("hide", list.length > 0);
+  const promos = CONFIG.promocoes || {};
+  const isNovo = (p) => /novidade/i.test(p.desc || "");
+
+  $("tbody").innerHTML = list.map((p) => {
+    const de = promos[p.id];
+    const img = (p.img && p.img.trim()) ? p.img : "";
+    const t = img ? `<img class="th" src="${esc(img)}" alt="" />` : `<div class="th" style="display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--bg3)">🦎</div>`;
+    return `
+    <tr>
+      <td data-l="Foto">${t}</td>
+      <td data-l="Produto"><div class="nome">${esc(p.nome)}</div>${isNovo(p) ? '<span class="tag">Novidade</span> ' : ""}<span class="tag">${esc(p.id)}</span></td>
+      <td data-l="Categoria"><span class="cat">${esc(catMap[p.cat] || p.cat || "—")}</span></td>
+      <td data-l="Preço"><span class="preco">${fmt(p.preco)}</span></td>
+      <td data-l="De">${de ? `<span class="preco-de">${fmt(de)}</span>` : "—"}</td>
+      <td data-l="Ações"><div class="row-actions">
+        <button onclick="openModal('${esc(p.id)}')">✏️ Editar</button>
+        <button class="del" onclick="deleteProduct('${esc(p.id)}')">🗑️</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+/* ================= MODAL PRODUTO ================= */
+function openModal(id){
+  editingId = null;
+  $("pNome").value = ""; $("pPreco").value = ""; $("pPrecoDe").value = "";
+  $("pId").value = ""; $("pDesc").value = ""; $("pImg").value = ""; $("pImgs").value = ""; $("pNovidade").checked = false;
+  $("modalTitle").textContent = "Novo produto";
+
+  if (id) {
+    const p = CONFIG.produtos.find((x) => x.id === id);
+    if (!p) return;
+    editingId = id;
+    $("modalTitle").textContent = "Editar: " + p.nome;
+    $("pNome").value = p.nome || "";
+    $("pPreco").value = p.preco ?? "";
+    $("pPrecoDe").value = (CONFIG.promocoes || {})[id] || "";
+    $("pId").value = p.id || "";
+    $("pDesc").value = p.desc || "";
+    $("pImg").value = p.img || "";
+    $("pImgs").value = (p.imgs || []).join(", ");
+    $("pNovidade").checked = /novidade/i.test(p.desc || "");
+    $("pCat").value = p.cat || CATS[0]?.key || "";
+  }
+  $("modal").classList.remove("hide");
+}
+
+function closeModal(){ $("modal").classList.add("hide"); editingId = null; }
+
+function slugify(s){
+  return String(s || "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+}
+
+function saveProduct(){
+  const nome = $("pNome").value.trim();
+  const preco = parseFloat($("pPreco").value);
+  if (!nome) { toast("Informe o nome do produto.", true); return; }
+  if (isNaN(preco) || preco < 0) { toast("Informe um preço válido.", true); return; }
+
+  const cat = $("pCat").value;
+  let id = $("pId").value.trim() || slugify(nome);
+  // garante id único
+  while (CONFIG.produtos.some((p) => p.id === id && p.id !== editingId)) id += "-2";
+
+  const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
+  const desc = $("pDesc").value.trim();
+  let finalDesc = desc;
+  if ($("pNovidade").checked && !/novidade/i.test(desc)) finalDesc = (desc ? desc + " " : "") + "Novidade.";
+
+  const produto = {
+    id,
+    cat: cat || CATS[0]?.key || "acessorio",
+    nome,
+    preco,
+    ...(finalDesc ? { desc: finalDesc } : {}),
+    ...($("pImg").value.trim() ? { img: $("pImg").value.trim() } : {}),
+    ...(imgs.length ? { imgs } : {})
+  };
+
+  if (editingId) {
+    const i = CONFIG.produtos.findIndex((p) => p.id === editingId);
+    if (i >= 0) CONFIG.produtos[i] = produto;
+  } else {
+    CONFIG.produtos.push(produto);
+  }
+
+  // promocao
+  const de = parseFloat($("pPrecoDe").value);
+  if (!isNaN(de) && de > preco) CONFIG.promocoes[id] = de;
+  else delete CONFIG.promocoes[id];
+  // se mudou o id, remove promocao antiga
+  if (editingId && editingId !== id) delete CONFIG.promocoes[editingId];
+
+  closeModal();
+  renderTable();
+  toast(editingId ? "Produto atualizado!" : "Produto adicionado!");
+  editingId = null;
+}
+
+function deleteProduct(id){
+  if (!confirm("Excluir \"" + (CONFIG.produtos.find((p) => p.id === id)?.nome || id) + "\"?")) return;
+  CONFIG.produtos = CONFIG.produtos.filter((p) => p.id !== id);
+  delete (CONFIG.promocoes || {})[id];
+  CONFIG.destaques = (CONFIG.destaques || []).filter((d) => d !== id);
+  renderTable();
+  toast("Produto excluído.");
+}
+
+/* ================= UTILS ================= */
+function openSettings(){
+  const box = $("settingsBox");
+  box.classList.toggle("hide");
+  if (!box.classList.contains("hide")) {
+    const st = lsGet("lyg_settings", {});
+    $("sToken").value = st.token || ""; $("sOwner").value = st.owner || "";
+    $("sRepo").value = st.repo || ""; $("sPath").value = st.path || "";
+  }
+}
+let toastTimer = null;
+function toast(msg, isErr){
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (isErr ? " err" : "");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 4000);
+}
+
+/* ================= BOOT ================= */
+(function boot(){
+  if (sessionStorage.getItem("lyg_admin_auth") === "1") {
+    $("loginView").classList.add("hide");
+    $("appView").classList.remove("hide");
+    init();
+  }
+})();
+</script>
+</body>
+</html>
