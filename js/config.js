@@ -809,9 +809,10 @@ const CONFIG = {
       "nome": "teste",
       "preco": 123,
       "desc": "teste",
-      "img": "img/screenshot-1-png.png",
+      "img": "img/gbdd-png.png",
       "imgs": [
-        "img/screenshot-1-png.png"
+        "img/screenshot-1-png.png",
+        "img/gbdd-png.png"
       ]
     }
   ]
