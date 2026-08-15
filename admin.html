@@ -424,6 +424,7 @@ async function uploadImage(){
     const reader = new FileReader();
     reader.onload = async () => {
       const base64 = reader.result.split(",")[1];
+      const dataUrl = reader.result;
       const path = "img/" + nomeArquivo;
 
       // evita duplicar: se já existe, só atualiza (mesmo sha)
@@ -442,6 +443,28 @@ async function uploadImage(){
         })
       });
 
+      // gera e envia a miniatura (img/th/) usada pelo site
+      try {
+        const thumbDataUrl = await makeThumb(dataUrl);
+        const thumbB64 = thumbDataUrl.split(",")[1];
+        const thumbPath = "img/th/" + nomeArquivo;
+        let tsha = null;
+        try {
+          const tcur = await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath));
+          tsha = tcur.sha;
+        } catch (e2) { /* arquivo novo */ }
+        await ghFetch("/repos/" + st.owner + "/" + st.repo + "/contents/" + encodeURIComponent(thumbPath), {
+          method: "PUT",
+          body: JSON.stringify({
+            message: "Upload de miniatura via painel admin: " + nomeArquivo,
+            content: thumbB64,
+            ...(tsha ? { sha: tsha } : {})
+          })
+        });
+      } catch (e2) {
+        console.warn("miniatura não gerada:", e2.message);
+      }
+
       // preenche o campo e a galeria
       $("pImg").value = path;
       const imgs = $("pImgs").value.split(",").map((s) => s.trim()).filter(Boolean);
@@ -456,6 +479,26 @@ async function uploadImage(){
     status.textContent = "Falha ao enviar: " + e.message;
     status.className = "up-status err";
   }
+}
+
+function makeThumb(dataUrl, maxW) {
+  maxW = maxW || 360;
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxW / img.width);
+        const w = Math.max(1, Math.round(img.width * scale));
+        const h = Math.max(1, Math.round(img.height * scale));
+        const cv = document.createElement("canvas");
+        cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(cv.toDataURL("image/jpeg", 0.8));
+      } catch (err) { reject(err); }
+    };
+    img.onerror = () => reject(new Error("não foi possível ler a imagem"));
+    img.src = dataUrl;
+  });
 }
 
 /* ================= PARSE / BUILD CONFIG.JS ================= */

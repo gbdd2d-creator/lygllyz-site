@@ -76,6 +76,15 @@
   };
   const thumbFor = (p) => thumbURL(imgFor(p));
 
+  // se a miniatura (img/th/) não existe, cai para a imagem original (img/)
+  window.imgFallback = (el) => {
+    if (!el || el.dataset.fb) return;
+    el.dataset.fb = "1";
+    const src = el.getAttribute("src");
+    if (!src) return;
+    if (src.indexOf("/th/") !== -1) el.setAttribute("src", src.replace("/th/", "/"));
+  };
+
   /* ---------- ESTADO ---------- */
   let activeCat = "todos";
   let search = "";
@@ -146,10 +155,10 @@
     return `
       <article class="card reveal" style="--d:${(i % 6) * 0.02}s">
         <div class="card-media" data-open="${p.id}" title="Ver detalhes">
-          <img class="card-media-bg" src="${thumbFor(p)}" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img class="card-media-bg" src="${thumbFor(p)}" alt="" aria-hidden="true" loading="lazy" decoding="async" onerror="imgFallback(this)">
           <span class="card-cat">${esc(cat.nome)}</span>
           ${flag}
-          <img class="card-media-fg" src="${thumbFor(p)}" alt="${esc(p.nome)}" loading="lazy" decoding="async">
+          <img class="card-media-fg" src="${thumbFor(p)}" alt="${esc(p.nome)}" loading="lazy" decoding="async" onerror="imgFallback(this)">
         </div>
         <div class="card-body">
           <h3 class="card-name">${esc(p.nome)}</h3>
@@ -415,7 +424,7 @@
       thumbs.innerHTML = galleryImgs
         .map(
           (src, i) =>
-            `<img class="prod-thumb${i === 0 ? " active" : ""}" src="${thumbURL(src)}" data-idx="${i}" alt="">`
+            `<img class="prod-thumb${i === 0 ? " active" : ""}" src="${thumbURL(src)}" data-idx="${i}" alt="" onerror="imgFallback(this)">`
         )
         .join("");
       thumbs.querySelectorAll(".prod-thumb").forEach((t) =>
@@ -494,7 +503,7 @@
       .map(
         (e) => `
         <div class="cart-item">
-          <div class="ci-icon"><img src="${thumbFor(e.p)}" alt=""></div>
+          <div class="ci-icon"><img src="${thumbFor(e.p)}" alt="" onerror="imgFallback(this)"></div>
           <div class="ci-info">
             <div class="ci-name">${esc(e.p.nome)}</div>
             <div class="ci-price">${fmt(e.p.preco)} · subtotal ${fmt(e.p.preco * e.q)}</div>
@@ -542,6 +551,7 @@
   function showToast(p) {
     if (!p || !$toast) return;
     $("toastImg").src = thumbFor(p);
+    $("toastImg").onerror = () => imgFallback($("toastImg"));
     $("toastName").textContent = p.nome;
     clearTimeout(toastHide);
     $toast.hidden = false;
